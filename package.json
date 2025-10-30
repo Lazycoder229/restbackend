@@ -1,0 +1,17 @@
+{
+  "name": "my-framework",
+  "version": "1.0.0",
+  "description": "Custom Node.js framework",
+  "main": "index.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {},
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  }
+}
