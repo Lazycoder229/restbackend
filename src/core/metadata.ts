@@ -9,6 +9,7 @@ export const PARAM_METADATA = "param:metadata";
 export const GUARDS_METADATA = "guards:metadata";
 export const INTERCEPTORS_METADATA = "interceptors:metadata";
 export const PIPES_METADATA = "pipes:metadata";
+export const ENTITY_METADATA = "entity:metadata";
 
 // HTTP Methods
 export type HttpMethod =

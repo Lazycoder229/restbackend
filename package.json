@@ -1,7 +1,7 @@
 {
   "name": "@restsjsapp/rest",
-  "version": "1.1.0",
-  "description": "🚀 Lightweight TypeScript framework with built-in security, database, and zero-config deployment. Decorators + DI + MySQL + JWT out of the box!",
+  "version": "1.2.0",
+  "description": "🚀 Lightweight TypeScript framework with built-in security, database, ORM, and zero-config deployment. Decorators + DI + Entity/Models + MySQL + JWT out of the box!",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "type": "commonjs",
@@ -9,23 +9,35 @@
     "dist",
     "LICENSE",
     "README.md",
-    "*.md"
+    "*.md",
+    "docs"
   ],
   "scripts": {
     "build": "tsc",
-    "prepublish": "npm run build"
+    "prepublish": "npm run build",
+    "prepare": "npm run build"
   },
   "keywords": [
     "nodejs",
     "nestjs",
     "typescript",
     "framework",
+    "rest",
+    "api",
+    "orm",
+    "entity",
+    "active-record",
+    "typeorm",
+    "database",
+    "mysql",
+    "decorators",
+    "dependency-injection",
+    "jwt",
+    "security",
     "middleware",
     "router",
     "http",
-    "web",
-    "decorators",
-    "dependency-injection"
+    "web"
   ],
   "author": "Resty Gonzales <gonzalesresty32@gmail.com>",
   "license": "MIT",

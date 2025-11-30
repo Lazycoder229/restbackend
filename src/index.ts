@@ -18,6 +18,7 @@ export {
 } from "./decorators/http-methods.decorator";
 export { Injectable } from "./decorators/injectable.decorator";
 export { Module } from "./decorators/module.decorator";
+export { Entity } from "./decorators/entity.decorator";
 export {
   Param,
   Query,
@@ -43,6 +44,7 @@ export {
   RateLimitInterceptor,
   QueryBuilder,
   Repository,
+  BaseEntity,
   Logger,
   GlobalExceptionFilter,
   LoggingInterceptor,

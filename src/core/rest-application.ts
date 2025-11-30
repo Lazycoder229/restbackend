@@ -81,6 +81,9 @@ export class RestApplication {
     // Scan modules and build DI container
     await this.moduleContainer.scanModule(this.rootModule);
 
+    // Initialize BaseEntity with database connection if available
+    this.moduleContainer.initializeDatabase();
+
     // Pre-compile routes for faster lookup
     this.compileRoutes();
   }

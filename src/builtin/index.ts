@@ -7,6 +7,7 @@ export { SecurityHeadersInterceptor } from "./security-headers.interceptor";
 export { RateLimitInterceptor } from "./rate-limit.interceptor";
 export { QueryBuilder } from "./query-builder";
 export { Repository } from "./repository";
+export { BaseEntity } from "./base-entity";
 export {
   Logger,
   GlobalExceptionFilter,

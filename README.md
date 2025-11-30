@@ -34,7 +34,8 @@ export class UsersController {
 | **🔥 Hot Reload**           | ✅ Built-in | Auto-restart on file changes (zero config)       |
 | **🔐 Security**             | ✅ Built-in | JWT, bcrypt, password validation, XSS protection |
 | **💾 Database**             | ✅ Built-in | MySQL with connection pooling                    |
-| **🗂️ ORM**                  | ✅ Built-in | Query Builder + Repository Pattern               |
+| **🗂️ ORM**                  | ✅ Built-in | Query Builder + Repository + Active Record       |
+| **📊 Entity/Models**        | ✅ Built-in | NestJS-like @Entity decorator & BaseEntity       |
 | **🛡️ CORS**                 | ✅ Built-in | Configurable cross-origin support                |
 | **⚡ Rate Limiting**        | ✅ Built-in | Prevent API abuse                                |
 | **🔒 Security Headers**     | ✅ Built-in | Helmet-like protection                           |
@@ -179,10 +180,12 @@ curl http://localhost:3000/hello
 
 ### Advanced Topics
 
-| #   | Guide                                                            | Description                                |
-| --- | ---------------------------------------------------------------- | ------------------------------------------ |
-| 10  | **[Middleware & Interceptors](./10-MIDDLEWARE_INTERCEPTORS.md)** | Guards, interceptors, and request pipeline |
-| 11  | **[Performance](./11-PERFORMANCE.md)**                           | Optimization techniques and benchmarks     |
+| #   | Guide                                                            | Description                                 |
+| --- | ---------------------------------------------------------------- | ------------------------------------------- |
+| 10  | **[Middleware & Interceptors](./10-MIDDLEWARE_INTERCEPTORS.md)** | Guards, interceptors, and request pipeline  |
+| 11  | **[Performance](./11-PERFORMANCE.md)**                           | Optimization techniques and benchmarks      |
+| 12  | **[Entities Guide](./docs/ENTITIES_GUIDE.md)**                   | Entity decorators and Active Record pattern |
+| 13  | **[Entity Examples](./docs/ENTITY_EXAMPLES.md)**                 | Complete MVC examples with entities         |
 
 ## 🎓 Learn by Example
 

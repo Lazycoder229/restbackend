@@ -1,6 +1,8 @@
 import "reflect-metadata";
 import { Container } from "./container";
 import { MODULE_METADATA, ModuleMetadata } from "./metadata";
+import { DatabaseService } from "../builtin/database.service";
+import { BaseEntity } from "../builtin/base-entity";
 
 /**
  * Module Container - manages modules and their dependencies
@@ -99,5 +101,19 @@ export class ModuleContainer {
     }
 
     throw new Error(`Provider ${provider.name} not found in any module`);
+  }
+
+  /**
+   * Initialize database connection for BaseEntity
+   * Should be called after scanModule() if using entities
+   */
+  initializeDatabase(): void {
+    try {
+      const db = this.resolve<DatabaseService>(DatabaseService);
+      BaseEntity.initializeConnection(db);
+    } catch (error) {
+      // DatabaseService is optional - only initialize if it exists
+      // This allows the framework to work without database
+    }
   }
 }
