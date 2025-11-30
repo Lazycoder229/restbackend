@@ -15,7 +15,15 @@
 
 - [Introduction](#introduction) - What's included
 - [Setup & Configuration](#setup--configuration) - Connect to database
-- [Choosing Your Approach](#choosing-your-approach) - QueryBuilder vs Repository
+- [Choosing Your Approach](#choosing-your-approach) - Which pattern to use
+
+### Entity Pattern (Recommended ⭐)
+
+- [Entity Basics](#entity-pattern) - @Entity decorator & BaseEntity
+- [Static Methods](#entity-static-methods) - findAll, findById, create, etc.
+- [Instance Methods](#entity-instance-methods) - save, delete, reload
+- [Custom Methods](#entity-custom-methods) - Extend your entities
+- [Complete Guide](./docs/ENTITIES_GUIDE.md) - Full documentation
 
 ### QueryBuilder
 
@@ -27,7 +35,7 @@
 
 ### Repository Pattern
 
-- [Creating Repositories](#repository-pattern) - Active Record
+- [Creating Repositories](#repository-pattern) - Service-based approach
 - [CRUD Operations](#crud-operations) - Full examples
 - [Custom Methods](#custom-methods) - Extend functionality
 - [Relations](#relations) - Handle relationships
@@ -48,7 +56,7 @@
 <details open>
 <summary><strong>What's included in RestJS ORM?</strong></summary>
 
-RestJS provides **two powerful approaches** for database operations:
+RestJS provides **three powerful approaches** for database operations:
 
 ### 1. QueryBuilder - Fluent SQL Interface
 
@@ -70,25 +78,55 @@ const users = await queryBuilder
 - ✅ Performance-critical operations
 - ✅ When you need full SQL control
 
-### 2. Repository Pattern - Active Record
+### 2. Entity Pattern - Active Record (NEW! ⭐)
 
 ```typescript
-// Simple, intuitive entity management
-class User extends Repository<User> {
-  tableName = "users";
+// NestJS-like entity decorators
+@Entity("users")
+class User extends BaseEntity {
+  id?: number;
+  name: string;
+  email: string;
 }
 
+// Use static methods
+const users = await User.findAll();
 const user = await User.findById(1);
-user.name = "Updated Name";
-await user.save();
+
+// Or instance methods
+const newUser = new User();
+newUser.name = "John";
+await newUser.save();
 ```
 
 **Best for:**
 
-- ✅ Simple CRUD operations
-- ✅ Working with entities/models
-- ✅ Rapid development
-- ✅ Clean, readable code
+- ✅ **Familiar API** - Same as NestJS + TypeORM
+- ✅ **Type-safe** - Full TypeScript support
+- ✅ **Zero boilerplate** - No repository classes needed
+- ✅ **Clean code** - Active Record pattern
+- ✅ **Rapid development** - Less code to write
+
+### 3. Repository Pattern
+
+```typescript
+// Service-based approach with repositories
+@Injectable()
+class UserRepository extends Repository<User> {
+  tableName = "users";
+}
+
+const user = await this.userRepo.findById(1);
+user.name = "Updated Name";
+await this.userRepo.save(user);
+```
+
+**Best for:**
+
+- ✅ Service layer architecture
+- ✅ Dependency injection pattern
+- ✅ When you prefer separation of concerns
+- ✅ Testing and mocking
 
 ### Architecture
 
@@ -207,9 +245,252 @@ try {
 
 ---
 
+## 🌟 Entity Pattern (Recommended)
+
+<details open>
+<summary><strong>The modern way to work with database models - just like NestJS + TypeORM!</strong></summary>
+
+### Quick Start
+
+```typescript
+import { Entity, BaseEntity } from "@restsjsapp/rest";
+
+@Entity("users")
+export class User extends BaseEntity {
+  id?: number;
+  name: string;
+  email: string;
+  age?: number;
+  isActive?: boolean;
+
+  // Custom static method
+  static async findByEmail(email: string): Promise<User | null> {
+    return await this.findOne({ email });
+  }
+
+  // Custom instance method
+  isAdult(): boolean {
+    return this.age ? this.age >= 18 : false;
+  }
+}
+
+// Usage - It's that simple!
+const users = await User.findAll();
+const user = await User.findById(1);
+const john = await User.findByEmail("john@example.com");
+
+const newUser = new User();
+newUser.name = "Jane";
+newUser.email = "jane@example.com";
+await newUser.save();
+```
+
+### Entity Static Methods
+
+| Method                     | Description         | Example                                          |
+| -------------------------- | ------------------- | ------------------------------------------------ |
+| `findAll()`                | Get all records     | `await User.findAll()`                           |
+| `findById(id)`             | Find by primary key | `await User.findById(1)`                         |
+| `findOne(conditions)`      | Find first matching | `await User.findOne({ email: 'test@test.com' })` |
+| `findMany(conditions)`     | Find all matching   | `await User.findMany({ isActive: true })`        |
+| `create(data)`             | Create new record   | `await User.create({ name: 'John' })`            |
+| `update(conditions, data)` | Update records      | `await User.update({ id: 1 }, { name: 'Jane' })` |
+| `remove(conditions)`       | Delete records      | `await User.remove({ isActive: false })`         |
+| `count(conditions?)`       | Count records       | `await User.count({ age: 25 })`                  |
+| `exists(conditions)`       | Check if exists     | `await User.exists({ email: 'test@test.com' })`  |
+| `query()`                  | Get QueryBuilder    | `await User.query().where('age', '>', 18).get()` |
+
+### Entity Instance Methods
+
+| Method     | Description        | Example               |
+| ---------- | ------------------ | --------------------- |
+| `save()`   | Insert or update   | `await user.save()`   |
+| `delete()` | Delete this record | `await user.delete()` |
+| `reload()` | Refresh from DB    | `await user.reload()` |
+
+### Complete Examples
+
+**Create:**
+
+```typescript
+const user = new User();
+user.name = "John Doe";
+user.email = "john@example.com";
+user.age = 25;
+await user.save();
+console.log("Created user:", user.id);
+```
+
+**Read:**
+
+```typescript
+// Single
+const user = await User.findById(1);
+if (user) {
+  console.log(user.name);
+}
+
+// Multiple with conditions
+const activeUsers = await User.findMany({ isActive: true });
+
+// Complex query
+const adults = await User.query()
+  .where("age", ">=", 18)
+  .orderBy("name", "ASC")
+  .limit(10)
+  .get();
+```
+
+**Update:**
+
+```typescript
+const user = await User.findById(1);
+if (user) {
+  user.name = "Jane Doe";
+  await user.save();
+}
+
+// Or bulk update
+await User.update({ isActive: false }, { isActive: true });
+```
+
+**Delete:**
+
+```typescript
+const user = await User.findById(1);
+if (user) {
+  await user.delete();
+}
+
+// Or bulk delete
+await User.remove({ isActive: false });
+```
+
+### 📚 Full Entity Documentation
+
+For complete documentation, examples, and advanced patterns, see:
+
+- **[Entity Guide](./docs/ENTITIES_GUIDE.md)** - Complete guide with all features
+- **[Entity Examples](./docs/ENTITY_EXAMPLES.md)** - Full working code examples
+- **[Quick Reference](./docs/ENTITY_QUICK_REFERENCE.md)** - Quick lookup table
+
+### 🔍 SQL Queries Generated by Entity Methods
+
+Here's what SQL queries are generated behind the scenes:
+
+| Entity Method                              | Generated SQL                                                          |
+| ------------------------------------------ | ---------------------------------------------------------------------- |
+| `User.findAll()`                           | `SELECT * FROM users`                                                  |
+| `User.findById(1)`                         | `SELECT * FROM users WHERE id = 1 LIMIT 1`                             |
+| `User.findOne({ email: 'test@test.com' })` | `SELECT * FROM users WHERE email = 'test@test.com' LIMIT 1`            |
+| `User.findMany({ isActive: true })`        | `SELECT * FROM users WHERE isActive = true`                            |
+| `User.create({ name: 'John' })`            | `INSERT INTO users (name) VALUES ('John')`                             |
+| `User.update({ id: 1 }, { name: 'Jane' })` | `UPDATE users SET name = 'Jane' WHERE id = 1`                          |
+| `User.remove({ isActive: false })`         | `DELETE FROM users WHERE isActive = false`                             |
+| `User.count()`                             | `SELECT COUNT(*) as count FROM users`                                  |
+| `User.count({ age: 25 })`                  | `SELECT COUNT(*) as count FROM users WHERE age = 25`                   |
+| `User.exists({ email: 'test@test.com' })`  | `SELECT COUNT(*) as count FROM users WHERE email = 'test@test.com'`    |
+| `user.save()` (new)                        | `INSERT INTO users (name, email) VALUES ('John', 'john@test.com')`     |
+| `user.save()` (existing)                   | `UPDATE users SET name = 'Jane', email = 'jane@test.com' WHERE id = 1` |
+| `user.delete()`                            | `DELETE FROM users WHERE id = 1`                                       |
+| `user.reload()`                            | `SELECT * FROM users WHERE id = 1 LIMIT 1`                             |
+
+**Note:** All queries use **parameterized statements** for SQL injection protection. The values shown are placeholders (`?` internally).
+
+</details>
+
+---
+
 ## QueryBuilder
 
 The QueryBuilder provides a fluent interface for constructing SQL queries.
+
+<details>
+<summary><strong>📋 Complete SQL Query Reference - All Built-in Methods</strong></summary>
+
+Here's a comprehensive list of all SQL queries generated by QueryBuilder methods:
+
+### SELECT Queries
+
+| Method                                       | Generated SQL                              |
+| -------------------------------------------- | ------------------------------------------ |
+| `.table('users').get()`                      | `SELECT * FROM users`                      |
+| `.table('users').select('id', 'name').get()` | `SELECT id, name FROM users`               |
+| `.table('users').first()`                    | `SELECT * FROM users LIMIT 1`              |
+| `.table('users').find(1)`                    | `SELECT * FROM users WHERE id = 1 LIMIT 1` |
+
+### WHERE Clauses
+
+| Method                                                   | Generated SQL                                              |
+| -------------------------------------------------------- | ---------------------------------------------------------- |
+| `.where('age', '>=', 18).get()`                          | `SELECT * FROM users WHERE age >= 18`                      |
+| `.where('age', 18).get()`                                | `SELECT * FROM users WHERE age = 18`                       |
+| `.where('status', 'active').where('age', '>', 18).get()` | `SELECT * FROM users WHERE status = 'active' AND age > 18` |
+| `.whereIn('id', [1, 2, 3]).get()`                        | `SELECT * FROM users WHERE id IN (1, 2, 3)`                |
+| `.whereLike('name', 'John').get()`                       | `SELECT * FROM users WHERE name LIKE '%John%'`             |
+
+### JOIN Queries
+
+| Method                                                    | Generated SQL                                                        |
+| --------------------------------------------------------- | -------------------------------------------------------------------- |
+| `.join('orders', 'users.id', 'orders.user_id').get()`     | `SELECT * FROM users INNER JOIN orders ON users.id = orders.user_id` |
+| `.leftJoin('orders', 'users.id', 'orders.user_id').get()` | `SELECT * FROM users LEFT JOIN orders ON users.id = orders.user_id`  |
+
+### ORDER BY & LIMIT
+
+| Method                                 | Generated SQL                                  |
+| -------------------------------------- | ---------------------------------------------- |
+| `.orderBy('name', 'ASC').get()`        | `SELECT * FROM users ORDER BY name ASC`        |
+| `.orderBy('created_at', 'DESC').get()` | `SELECT * FROM users ORDER BY created_at DESC` |
+| `.limit(10).get()`                     | `SELECT * FROM users LIMIT 10`                 |
+| `.limit(10).offset(20).get()`          | `SELECT * FROM users LIMIT 10 OFFSET 20`       |
+
+### INSERT Queries
+
+| Method                                              | Generated SQL                                                      |
+| --------------------------------------------------- | ------------------------------------------------------------------ |
+| `.insert({ name: 'John', email: 'john@test.com' })` | `INSERT INTO users (name, email) VALUES ('John', 'john@test.com')` |
+| `.insertMany([{ name: 'John' }, { name: 'Jane' }])` | `INSERT INTO users (name) VALUES ('John'), ('Jane')`               |
+
+### UPDATE Queries
+
+| Method                                                     | Generated SQL                                                 |
+| ---------------------------------------------------------- | ------------------------------------------------------------- |
+| `.where('id', 1).update({ name: 'Jane' })`                 | `UPDATE users SET name = 'Jane' WHERE id = 1`                 |
+| `.where('status', 'pending').update({ status: 'active' })` | `UPDATE users SET status = 'active' WHERE status = 'pending'` |
+
+### DELETE Queries
+
+| Method                                  | Generated SQL                                 |
+| --------------------------------------- | --------------------------------------------- |
+| `.where('id', 1).delete()`              | `DELETE FROM users WHERE id = 1`              |
+| `.where('status', 'inactive').delete()` | `DELETE FROM users WHERE status = 'inactive'` |
+
+### AGGREGATE Functions
+
+| Method                               | Generated SQL                                                     |
+| ------------------------------------ | ----------------------------------------------------------------- |
+| `.count()`                           | `SELECT COUNT(*) as count FROM users`                             |
+| `.where('status', 'active').count()` | `SELECT COUNT(*) as count FROM users WHERE status = 'active'`     |
+| `.exists()`                          | `SELECT COUNT(*) as count FROM users` (returns true if count > 0) |
+
+### PAGINATION
+
+| Method             | Generated SQL                                                                       |
+| ------------------ | ----------------------------------------------------------------------------------- |
+| `.paginate(1, 20)` | Two queries: `SELECT COUNT(*) FROM users` + `SELECT * FROM users LIMIT 20 OFFSET 0` |
+
+### RAW SQL
+
+| Method                                            | Generated SQL                                         |
+| ------------------------------------------------- | ----------------------------------------------------- |
+| `.raw('SELECT * FROM users WHERE age > ?', [18])` | Executes exactly as written with parameterized values |
+
+**Total Built-in Methods: 22** covering all common SQL operations!
+
+**Note:** All queries use **parameterized statements** (`?` placeholders) to prevent SQL injection.
+
+</details>
 
 ### Basic Setup
 
