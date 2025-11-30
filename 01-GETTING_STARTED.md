@@ -1,14 +1,94 @@
-# Getting Started with RestJS
+# 🚀 Getting Started with RestJS
 
-This guide will help you create your first REST API with RestJS in under 10 minutes.
+**Welcome!** This guide will take you from zero to a working REST API in under 10 minutes. Perfect for beginners and experienced developers alike.
 
-## Prerequisites
+---
 
-- Node.js (v14 or higher)
-- TypeScript knowledge (basic)
-- MySQL (optional, only if you need database)
+## 📋 Table of Contents
 
-## Installation
+- [Prerequisites](#prerequisites)
+- [Quick Start (CLI)](#quick-start-cli)
+- [Manual Installation](#manual-installation)
+- [Your First Application](#your-first-application)
+- [Understanding the Code](#understanding-the-code)
+- [Adding Services](#adding-services)
+- [Database Integration](#database-integration)
+- [Hot Reload](#hot-reload)
+- [Next Steps](#next-steps)
+
+---
+
+## ✅ Prerequisites
+
+<details>
+<summary><strong>Click to see system requirements</strong></summary>
+
+### Required
+- **Node.js** v14 or higher ([Download](https://nodejs.org/))
+- **npm** or **yarn** package manager
+- **TypeScript** basic knowledge ([Learn basics in 5 mins](https://www.typescriptlang.org/docs/handbook/typescript-in-5-minutes.html))
+
+### Optional (for database features)
+- **MySQL** 5.7+ or 8.0+ ([Download](https://dev.mysql.com/downloads/mysql/))
+- **MySQL Workbench** (GUI tool for database management)
+
+### Check your setup
+```bash
+node --version    # Should be v14+
+npm --version     # Should be 6+
+tsc --version     # Should be 4.0+
+```
+
+</details>
+
+---
+
+## ⚡ Quick Start (CLI)
+
+**Fastest way to create a new project:**
+
+<details open>
+<summary><strong>Using npx (recommended)</strong></summary>
+
+```bash
+# Create a new project
+npx @restsjsapp/create my-app
+
+# Choose a template:
+# 1. basic   - Simple hello world
+# 2. api     - CRUD API with users module
+# 3. full    - Complete app with database & auth
+
+# Navigate and start
+cd my-app
+npm install
+npm start
+```
+
+**Your app is now running at `http://localhost:3000`** 🎉
+
+</details>
+
+<details>
+<summary><strong>Using npm init</strong></summary>
+
+```bash
+npm init @restsjsapp my-app
+cd my-app
+npm install
+npm start
+```
+
+</details>
+
+---
+
+## 🔧 Manual Installation
+
+**Want to start from scratch? Follow these steps:**
+
+<details>
+<summary><strong>Step-by-step installation</strong></summary>
 
 ### 1. Clone the Repository
 
@@ -23,44 +103,86 @@ cd restbackend
 npm install
 ```
 
+**What gets installed:**
+- `typescript` - TypeScript compiler
+- `reflect-metadata` - Decorator metadata support
+- `@types/node` - Node.js type definitions
+- Built-in features (no external dependencies!)
+
 ### 3. Build the Framework
 
 ```bash
 npm run build
 ```
 
-## Your First Application
+This compiles TypeScript to JavaScript in the `dist/` folder.
 
-### Step 1: Create a Simple Controller
+### 4. Verify Installation
 
-Create `src/main.ts`:
+```bash
+# Check if build was successful
+ls dist/
+
+# You should see:
+# - index.js, index.d.ts
+# - core/, decorators/, builtin/, common/
+```
+
+</details>
+
+---
+
+## 🎯 Your First Application
+
+### Step 1: Create a Controller
+
+<details open>
+<summary><strong>What is a Controller?</strong></summary>
+
+A **Controller** handles HTTP requests. Think of it as a set of routes grouped together.
+
+**Example:** A `UserController` handles all `/users` routes like:
+- `GET /users` - Get all users
+- `GET /users/:id` - Get one user
+- `POST /users` - Create user
+
+</details>
+
+**Create your first controller file:**
 
 ```typescript
-import "reflect-metadata";
-import { RestFactory, Controller, Get, Module } from "./index";
+// src/main.ts
+import "reflect-metadata";  // Required for decorators to work
+import { RestFactory, Controller, Get, Module, Param } from "./index";
 
-@Controller("/hello")
+// Step 1: Define a Controller
+@Controller("/hello")  // All routes in this controller start with /hello
 class HelloController {
+  
+  // GET /hello
   @Get()
   sayHello() {
     return { message: "Hello, World!" };
   }
 
+  // GET /hello/:name (dynamic route parameter)
   @Get("/:name")
   greet(@Param("name") name: string) {
     return { message: `Hello, ${name}!` };
   }
 }
 
+// Step 2: Create a Module (organizes your app)
 @Module({
-  controllers: [HelloController],
+  controllers: [HelloController],  // Register controllers here
 })
 class AppModule {}
 
+// Step 3: Bootstrap the application
 async function bootstrap() {
   const app = await RestFactory.create(AppModule);
 
-  // Enable hot reload for development (automatically restarts on file changes)
+  // Enable hot reload for development
   app.enableHotReload();
 
   await app.listen(3000);
@@ -70,28 +192,98 @@ async function bootstrap() {
 bootstrap();
 ```
 
+<details>
+<summary><strong>💡 Understanding the code</strong></summary>
+
+**Line-by-line breakdown:**
+
+1. **`import "reflect-metadata"`** - Enables decorator metadata (required once in your app)
+2. **`@Controller("/hello")`** - Class decorator that marks this as a controller with base path
+3. **`@Get()`** - Method decorator for GET requests
+4. **`@Param("name")`** - Extracts route parameter from URL
+5. **`@Module({})`** - Organizes controllers and services
+6. **`RestFactory.create()`** - Creates and initializes your app
+7. **`app.enableHotReload()`** - Auto-restart on file changes (dev only)
+8. **`app.listen(3000)`** - Start HTTP server on port 3000
+
+</details>
+
+---
+
 ### Step 2: Run the Application
 
 ```bash
 npm run dev
 ```
 
+**Expected output:**
+```
+Application is running on: http://localhost:3000
+🔥 Hot reload enabled - watching for changes...
+```
+
+---
+
 ### Step 3: Test Your API
+
+<details open>
+<summary><strong>Using cURL (command line)</strong></summary>
 
 ```bash
 # Test basic route
 curl http://localhost:3000/hello
+# Response: {"message":"Hello, World!"}
 
 # Test with parameter
 curl http://localhost:3000/hello/John
+# Response: {"message":"Hello, John!"}
 ```
 
-## Next: Add a Service
+</details>
+
+<details>
+<summary><strong>Using browser</strong></summary>
+
+Open these URLs in your browser:
+- http://localhost:3000/hello
+- http://localhost:3000/hello/YourName
+
+</details>
+
+<details>
+<summary><strong>Using Postman or Thunder Client</strong></summary>
+
+1. Open Postman/Thunder Client
+2. Create new GET request
+3. Enter URL: `http://localhost:3000/hello`
+4. Click Send
+
+</details>
+
+---
+
+## 🔧 Adding Business Logic (Services)
+
+### What is a Service?
+
+<details>
+<summary><strong>Click to learn about services</strong></summary>
+
+**Services** contain your business logic, separate from HTTP handling:
+
+- ✅ **Reusable** - Share logic across multiple controllers
+- ✅ **Testable** - Easy to unit test without HTTP
+- ✅ **Injectable** - Automatically provided by DI container
+- ✅ **Single Responsibility** - Controllers handle HTTP, services handle logic
+
+</details>
+
+---
 
 ### Step 1: Create a Service
 
 ```typescript
-// users.service.ts
+// src/users.service.ts
 import { Injectable } from "./index";
 
 interface User {
@@ -127,31 +319,52 @@ export class UsersService {
 }
 ```
 
+---
+
 ### Step 2: Create a Controller
 
+<details>
+<summary><strong>💡 Notice the Dependency Injection</strong></summary>
+
+The `constructor(private usersService: UsersService)` automatically injects the service!
+
+**How it works:**
+1. Framework sees `@Injectable()` on `UsersService`
+2. Creates instance of `UsersService`
+3. Injects it into controller constructor
+4. You can use `this.usersService` everywhere
+
+**No manual instantiation needed!** ✨
+
+</details>
+
 ```typescript
-// users.controller.ts
-import { Controller, Get, Post, Param, Body, NotFoundException } from "./index";
+// src/users.controller.ts
+import { Controller, Get, Post, Param, Body } from "./index";
 import { UsersService } from "./users.service";
 
-@Controller("/users")
+@Controller("/users")  // Base path: /users
 export class UsersController {
+  // Dependency Injection: Service auto-injected by framework
   constructor(private usersService: UsersService) {}
 
+  // GET /users - Get all users
   @Get()
   getAllUsers() {
     return this.usersService.findAll();
   }
 
+  // GET /users/:id - Get one user by ID
   @Get("/:id")
   getUserById(@Param("id") id: string) {
     const user = this.usersService.findById(parseInt(id));
     if (!user) {
-      throw new NotFoundException("User not found");
+      return { error: "User not found", statusCode: 404 };
     }
     return user;
   }
 
+  // POST /users - Create new user
   @Post()
   createUser(@Body() body: { name: string; email: string }) {
     return this.usersService.create(body.name, body.email);
@@ -159,7 +372,47 @@ export class UsersController {
 }
 ```
 
+<details>
+<summary><strong>🔍 Understanding decorators</strong></summary>
+
+| Decorator | Purpose | Example |
+|-----------|---------|---------|
+| `@Controller(path)` | Define base route | `@Controller("/users")` |
+| `@Get(path)` | Handle GET requests | `@Get("/:id")` |
+| `@Post(path)` | Handle POST requests | `@Post()` |
+| `@Param(name)` | Extract URL parameter | `@Param("id")` |
+| `@Body()` | Extract request body | `@Body()` |
+| `@Query(name)` | Extract query parameter | `@Query("search")` |
+
+</details>
+
+---
+
 ### Step 3: Create a Module
+
+<details>
+<summary><strong>What is a Module?</strong></summary>
+
+Modules organize your application into logical sections:
+
+```
+AppModule (root)
+  ├── UsersModule
+  │   ├── UsersController
+  │   └── UsersService
+  │
+  └── ProductsModule
+      ├── ProductsController
+      └── ProductsService
+```
+
+**Benefits:**
+- ✅ Better code organization
+- ✅ Clear separation of concerns
+- ✅ Easier testing
+- ✅ Reusable modules
+
+</details>
 
 ```typescript
 // users.module.ts
@@ -211,23 +464,71 @@ curl -X POST http://localhost:3000/users \
   -d '{"name":"Bob","email":"bob@example.com"}'
 ```
 
-## Add Database Support
+---
 
-### Step 1: Setup Database
+## 💾 Database Integration
+
+<details>
+<summary><strong>Prerequisites</strong></summary>
+
+- MySQL 5.7+ or 8.0+ installed and running
+- MySQL credentials (username/password)
+- Database created
+
+**Quick MySQL setup:**
+```bash
+# Windows (via installer)
+# Download from: https://dev.mysql.com/downloads/mysql/
+
+# Mac (via Homebrew)
+brew install mysql
+brew services start mysql
+
+# Linux (Ubuntu/Debian)
+sudo apt-get install mysql-server
+sudo systemctl start mysql
+```
+
+</details>
+
+---
+
+### Step 1: Setup Database Schema
+
+<details open>
+<summary><strong>Create database and table</strong></summary>
+
+**Run this SQL in MySQL Workbench or command line:**
 
 ```sql
+-- Create database
 CREATE DATABASE myapp;
 USE myapp;
 
+-- Create users table
 CREATE TABLE users (
   id INT AUTO_INCREMENT PRIMARY KEY,
   name VARCHAR(255) NOT NULL,
   email VARCHAR(255) NOT NULL UNIQUE,
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  password VARCHAR(255),
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
+
+-- Insert sample data
+INSERT INTO users (name, email, password) VALUES
+  ('John Doe', 'john@example.com', 'hashed_password_here'),
+  ('Jane Smith', 'jane@example.com', 'hashed_password_here');
+
+-- Verify
+SELECT * FROM users;
 ```
 
-### Step 2: Initialize Database in Main
+</details>
+
+---
+
+### Step 2: Initialize Database Connection
 
 ```typescript
 // main.ts

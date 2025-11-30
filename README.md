@@ -60,45 +60,101 @@ RestJS outperforms industry-leading frameworks:
 
 ## 🚀 Quick Start
 
-### Installation
+<details open>
+<summary><strong>⚡ Fastest Way - Use CLI Generator</strong></summary>
 
 ```bash
+# Create new project instantly
+npx @restsjsapp/create my-app
+
+# Choose template:
+# • basic - Hello world
+# • api   - CRUD with users
+# • full  - Complete app with auth & database
+
+cd my-app
+npm install
+npm start
+
+# 🎉 Server running at http://localhost:3000
+```
+
+</details>
+
+<details>
+<summary><strong>🔧 Manual Installation</strong></summary>
+
+```bash
+# Clone repository
 git clone https://github.com/Lazycoder229/restbackend.git
 cd restbackend
+
+# Install dependencies
 npm install
+
+# Build framework
 npm run build
 ```
 
-### Create Your First API
+</details>
+
+---
+
+### 📝 Your First API (60 seconds)
 
 ```typescript
 // src/main.ts
-import { RestFactory, Controller, Get, Module } from "./index";
+import { RestFactory, Controller, Get, Module } from "@restsjsapp/rest";
 
+// 1. Define Controller
 @Controller("/hello")
 class HelloController {
   @Get()
   sayHello() {
     return { message: "Hello RestJS!" };
   }
+  
+  @Get("/:name")
+  greet(@Param("name") name: string) {
+    return { message: `Hello, ${name}!` };
+  }
 }
 
+// 2. Create Module
 @Module({
   controllers: [HelloController],
 })
 class AppModule {}
 
+// 3. Bootstrap Application
 async function bootstrap() {
   const app = await RestFactory.create(AppModule);
-
-  // Enable hot reload for development
+  
+  // 🔥 Enable hot reload (dev mode)
   app.enableHotReload();
-
+  
   await app.listen(3000);
 }
 
 bootstrap();
 ```
+
+<details>
+<summary><strong>🧪 Test Your API</strong></summary>
+
+```bash
+# Terminal 1: Start server
+npm run dev
+
+# Terminal 2: Test endpoints
+curl http://localhost:3000/hello
+# Response: {"message":"Hello RestJS!"}
+
+curl http://localhost:3000/hello/World
+# Response: {"message":"Hello, World!"}
+```
+
+</details>
 
 ```bash
 npm run dev

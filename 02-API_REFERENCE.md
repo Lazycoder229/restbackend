@@ -1,82 +1,285 @@
-# API Reference
+# 📖 API Reference
 
-Complete reference for all RestJS decorators, classes, and built-in features.
+**Complete reference guide for all RestJS decorators, classes, and built-in features.**
 
-## Table of Contents
-
-1. [Core Classes](#core-classes)
-2. [Decorators](#decorators)
-3. [Built-in Services](#built-in-services)
-4. [Guards](#guards)
-5. [Interceptors](#interceptors)
-6. [Interfaces](#interfaces)
+> This document serves as your go-to reference while building with RestJS. Bookmark it!
 
 ---
 
-## Core Classes
+## 📑 Table of Contents
+
+<details open>
+<summary><strong>Quick Navigation</strong></summary>
+
+### Core
+- [RestFactory](#restfactory) - Application creation
+- [RestApplication](#restapplication) - Main app instance
+
+### Decorators
+- [Class Decorators](#class-decorators) - `@Controller`, `@Module`, `@Injectable`
+- [Method Decorators](#method-decorators) - `@Get`, `@Post`, `@Put`, `@Delete`, etc.
+- [Parameter Decorators](#parameter-decorators) - `@Param`, `@Body`, `@Query`, etc.
+- [Enhancement Decorators](#enhancement-decorators) - `@UseGuards`, `@UseInterceptors`
+
+### Built-in Features
+- [DatabaseService](#databaseservice) - MySQL connection pooling
+- [SecurityService](#securityservice) - JWT & password hashing
+- [QueryBuilder](#querybuilder) - SQL query builder
+- [Repository](#repository) - Active Record pattern
+- [Logger](#logger) - Logging utility
+
+### Advanced
+- [Guards](#guards) - Route protection
+- [Interceptors](#interceptors) - Request/response transformation
+- [Interfaces](#interfaces) - TypeScript interfaces
+
+</details>
+
+---
+
+## 🏭 Core Classes
 
 ### RestFactory
 
-Factory class for creating RestJS applications.
+<details>
+<summary><strong>Application factory for creating RestJS instances</strong></summary>
 
-#### `create(module: Type<any>): Promise<RestApplication>`
+The `RestFactory` is your entry point - it creates and bootstraps your application.
+
+</details>
+
+#### 📌 `create(module: Type<any>): Promise<RestApplication>`
 
 Creates and initializes a new application instance.
 
+**Parameters:**
+- `module` - Root module class decorated with `@Module()`
+
+**Returns:** `Promise<RestApplication>` - Initialized application instance
+
+**Example:**
+
 ```typescript
-import { RestFactory, Module } from "restjs";
+import { RestFactory, Module } from "@restsjsapp/rest";
 
 @Module({
   controllers: [AppController],
+  providers: [AppService],
 })
 class AppModule {}
 
-const app = await RestFactory.create(AppModule);
+async function bootstrap() {
+  const app = await RestFactory.create(AppModule);
+  await app.listen(3000);
+}
+
+bootstrap();
 ```
+
+<details>
+<summary><strong>🔍 What happens during create()?</strong></summary>
+
+1. **Module scanning** - Analyzes all `@Module()` decorators
+2. **Dependency resolution** - Builds dependency graph
+3. **Provider instantiation** - Creates all services
+4. **Route registration** - Maps controllers to HTTP routes
+5. **Metadata collection** - Gathers all decorator metadata
+
+**Execution time:** ~10-50ms depending on app size
+
+</details>
 
 ---
 
 ### RestApplication
 
-Main application class.
+<details>
+<summary><strong>Main application instance with HTTP server and DI container</strong></summary>
 
-#### `init(): Promise<void>`
+The `RestApplication` manages your HTTP server, routes, and dependency injection.
 
-Initializes the module container and dependency injection.
+**Key responsibilities:**
+- HTTP request handling
+- Route matching and execution
+- Middleware/interceptor pipeline
+- Global configuration
 
-```typescript
-await app.init();
-```
+</details>
 
-#### `listen(port: number): Promise<void>`
+#### 📌 `listen(port: number): Promise<void>`
 
 Starts the HTTP server on the specified port.
 
+**Parameters:**
+- `port` - Port number (1024-65535)
+
+**Returns:** `Promise<void>` - Resolves when server is listening
+
+**Example:**
+
 ```typescript
 await app.listen(3000);
-console.log("Server running on http://localhost:3000");
+// Output: Application is running on: http://localhost:3000
 ```
 
-#### `setGlobalPrefix(prefix: string): void`
+<details>
+<summary><strong>💡 Best practices</strong></summary>
+
+```typescript
+// ✅ Good - Use environment variable
+const PORT = parseInt(process.env.PORT || "3000");
+await app.listen(PORT);
+
+// ✅ Good - Handle errors
+try {
+  await app.listen(3000);
+} catch (error) {
+  console.error("Failed to start server:", error);
+  process.exit(1);
+}
+
+// ❌ Avoid - Hardcoded port in production
+await app.listen(3000);  // What if port is taken?
+```
+
+</details>
+
+---
+
+#### 📌 `setGlobalPrefix(prefix: string): void`
 
 Sets a global prefix for all routes.
 
+**Parameters:**
+- `prefix` - URL prefix (e.g., `/api`, `/v1`)
+
+**Example:**
+
 ```typescript
 app.setGlobalPrefix("/api");
-// All routes will be prefixed with /api
+
+// Routes are now:
+// /api/users
+// /api/products
+// etc.
 ```
 
-#### `get<T>(token: Type<T>): T`
+<details>
+<summary><strong>📝 Common use cases</strong></summary>
+
+**API versioning:**
+```typescript
+app.setGlobalPrefix("/api/v1");
+```
+
+**Multi-tenant applications:**
+```typescript
+app.setGlobalPrefix(`/${tenantId}`);
+```
+
+**Microservices:**
+```typescript
+app.setGlobalPrefix("/user-service");
+```
+
+</details>
+
+---
+
+#### 📌 `enableHotReload(options?: HotReloadOptions): void`
+
+Enables automatic server restart on file changes (development only).
+
+**Parameters:**
+- `options?` - Optional configuration
+
+**Example:**
+
+```typescript
+// Simple usage
+app.enableHotReload();
+
+// Advanced configuration
+app.enableHotReload({
+  watchPaths: ["src", "config"],
+  debounceMs: 500,
+  ignore: ["*.log", "*.tmp"],
+  onReload: () => console.log("Reloading...")
+});
+```
+
+<details>
+<summary><strong>⚙️ Configuration options</strong></summary>
+
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| `watchPaths` | `string[]` | `["src"]` | Directories to watch |
+| `debounceMs` | `number` | `300` | Wait time for multiple changes |
+| `ignore` | `string[]` | `["node_modules", "dist"]` | Patterns to ignore |
+| `onReload` | `() => void` | - | Custom hook before reload |
+
+**File types watched:**
+- `.ts` - TypeScript files
+- `.js` - JavaScript files
+- `.json` - JSON configuration
+
+**⚠️ Production warning:** Never enable in production! Use PM2 or similar instead.
+
+</details>
+
+---
+
+#### 📌 `get<T>(token: Type<T>): T`
 
 Retrieves a provider from the dependency injection container.
 
+**Parameters:**
+- `token` - Class or injection token
+
+**Returns:** `T` - Instance of the requested provider
+
+**Example:**
+
 ```typescript
 const dbService = app.get<DatabaseService>(DatabaseService);
+await dbService.query("SELECT * FROM users");
 ```
 
-#### `useGlobalInterceptors(...interceptors: NestInterceptor[]): void`
+<details>
+<summary><strong>🎯 When to use</strong></summary>
 
-Registers global interceptors.
+**Good use cases:**
+- Manual service access in bootstrap
+- Testing and debugging
+- Custom initialization logic
+
+```typescript
+async function bootstrap() {
+  const app = await RestFactory.create(AppModule);
+  
+  // Initialize database on startup
+  const db = app.get<DatabaseService>(DatabaseService);
+  await db.initialize({
+    host: "localhost",
+    user: "root",
+    database: "myapp"
+  });
+  
+  await app.listen(3000);
+}
+```
+
+**Avoid:**
+- Inside controllers (use constructor injection instead)
+- For regular dependency access (defeats DI purpose)
+
+</details>
+
+---
+
+#### 📌 `useGlobalInterceptors(...interceptors: RestInterceptor[]): void`
+
+Registers global interceptors that run on every request.
 
 ```typescript
 app.useGlobalInterceptors(
