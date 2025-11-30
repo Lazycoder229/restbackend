@@ -1,26 +1,202 @@
-# ORM Guide
+# 🗄️ ORM Guide
 
-RestJS includes a built-in ORM with **QueryBuilder** and **Repository** pattern for database operations without writing raw SQL.
+**Master database operations with RestJS's built-in QueryBuilder and Repository pattern.**
 
-## Table of Contents
-
-1. [Introduction](#introduction)
-2. [QueryBuilder](#querybuilder)
-3. [Repository Pattern](#repository-pattern)
-4. [Advanced Queries](#advanced-queries)
-5. [Transactions](#transactions)
-6. [Best Practices](#best-practices)
+> No TypeORM, no Sequelize, no Prisma needed. Everything is built-in and production-ready.
 
 ---
 
-## Introduction
+## 📑 Table of Contents
 
-RestJS provides two ways to interact with your MySQL database:
+<details open>
+<summary><strong>Database Topics</strong></summary>
 
-1. **QueryBuilder** - Fluent interface for building SQL queries
-2. **Repository** - Active Record pattern for entity management
+### Getting Started
+- [Introduction](#introduction) - What's included
+- [Setup & Configuration](#setup--configuration) - Connect to database
+- [Choosing Your Approach](#choosing-your-approach) - QueryBuilder vs Repository
 
-Both are built on top of `DatabaseService` and use MySQL2 connection pooling.
+### QueryBuilder
+- [Basic Queries](#querybuilder) - SELECT, INSERT, UPDATE, DELETE
+- [Where Clauses](#where-clauses) - Filtering data
+- [Joins](#joins) - Combining tables
+- [Aggregations](#aggregations) - COUNT, SUM, AVG, etc.
+- [Raw Queries](#raw-queries) - When you need SQL
+
+### Repository Pattern
+- [Creating Repositories](#repository-pattern) - Active Record
+- [CRUD Operations](#crud-operations) - Full examples
+- [Custom Methods](#custom-methods) - Extend functionality
+- [Relations](#relations) - Handle relationships
+
+### Advanced
+- [Transactions](#transactions) - ACID compliance
+- [Query Optimization](#query-optimization) - Performance tips
+- [Migration Strategies](#migration-strategies) - Schema management
+- [Best Practices](#best-practices) - Production checklist
+
+</details>
+
+---
+
+## 🎯 Introduction
+
+<details open>
+<summary><strong>What's included in RestJS ORM?</strong></summary>
+
+RestJS provides **two powerful approaches** for database operations:
+
+### 1. QueryBuilder - Fluent SQL Interface
+
+```typescript
+// Chainable, type-safe SQL building
+const users = await queryBuilder
+  .table("users")
+  .select(["id", "name", "email"])
+  .where("age", ">=", 18)
+  .orderBy("name", "ASC")
+  .limit(10)
+  .get();
+```
+
+**Best for:**
+- ✅ Complex queries with multiple joins
+- ✅ Dynamic query building
+- ✅ Performance-critical operations
+- ✅ When you need full SQL control
+
+### 2. Repository Pattern - Active Record
+
+```typescript
+// Simple, intuitive entity management
+class User extends Repository<User> {
+  tableName = "users";
+}
+
+const user = await User.findById(1);
+user.name = "Updated Name";
+await user.save();
+```
+
+**Best for:**
+- ✅ Simple CRUD operations
+- ✅ Working with entities/models
+- ✅ Rapid development
+- ✅ Clean, readable code
+
+### Architecture
+
+```
+┌─────────────────────────────────────────┐
+│         Your Application Code           │
+├─────────────────┬───────────────────────┤
+│  QueryBuilder   │   Repository Pattern  │
+├─────────────────┴───────────────────────┤
+│          DatabaseService                │
+│     (MySQL2 Connection Pool)            │
+├─────────────────────────────────────────┤
+│            MySQL Database               │
+└─────────────────────────────────────────┘
+```
+
+**All built on:**
+- MySQL2 with connection pooling
+- Parameterized queries (SQL injection protection)
+- Promise-based async/await
+- Zero external ORM dependencies
+
+</details>
+
+<details>
+<summary><strong>🆚 QueryBuilder vs Repository - Which to use?</strong></summary>
+
+| Feature | QueryBuilder | Repository |
+|---------|-------------|------------|
+| **Complexity** | Handles complex joins | Better for simple queries |
+| **Learning Curve** | SQL knowledge helpful | Easy for beginners |
+| **Type Safety** | Moderate | Strong (TypeScript generics) |
+| **Flexibility** | Maximum control | Opinionated structure |
+| **Performance** | Optimized queries | Good for most cases |
+| **Code Style** | Fluent API | Object-oriented |
+
+**Example comparison:**
+
+```typescript
+// QueryBuilder - More explicit
+const user = await qb
+  .table("users")
+  .select()
+  .where("email", "=", email)
+  .first();
+
+// Repository - More concise
+const user = await User.findOne({ email });
+```
+
+**Pro tip:** Use both! QueryBuilder for complex reporting, Repository for daily CRUD.
+
+</details>
+
+---
+
+## ⚙️ Setup & Configuration
+
+<details>
+<summary><strong>Database Connection Setup</strong></summary>
+
+### Step 1: Initialize DatabaseService
+
+```typescript
+// main.ts
+import { DatabaseService } from "@restsjsapp/rest";
+
+async function bootstrap() {
+  const app = await RestFactory.create(AppModule);
+  
+  // Get database service
+  const db = app.get<DatabaseService>(DatabaseService);
+  
+  // Initialize connection
+  await db.initialize({
+    host: process.env.DB_HOST || "localhost",
+    port: parseInt(process.env.DB_PORT || "3306"),
+    user: process.env.DB_USER || "root",
+    password: process.env.DB_PASSWORD || "",
+    database: process.env.DB_NAME || "myapp",
+    connectionLimit: 10,  // Connection pool size
+  });
+  
+  console.log("✅ Database connected");
+  
+  await app.listen(3000);
+}
+```
+
+### Step 2: Environment Variables (.env)
+
+```bash
+# .env
+DB_HOST=localhost
+DB_PORT=3306
+DB_USER=root
+DB_PASSWORD=your_secure_password
+DB_NAME=myapp
+```
+
+### Step 3: Verify Connection
+
+```typescript
+// Test connection
+try {
+  const result = await db.query("SELECT 1 + 1 AS result");
+  console.log("Database test:", result); // [{ result: 2 }]
+} catch (error) {
+  console.error("Database connection failed:", error);
+  process.exit(1);
+}
+```
+
+</details>
 
 ---
 

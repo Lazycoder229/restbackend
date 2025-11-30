@@ -1,33 +1,168 @@
-# Middleware & Interceptors Guide
+# 🛡️ Guards & Interceptors Guide
 
-Complete guide to using middleware, interceptors, and guards in RestJS.
+**Master the request/response pipeline to build secure, powerful APIs.**
 
-## Table of Contents
-
-1. [Overview](#overview)
-2. [Guards](#guards)
-3. [Interceptors](#interceptors)
-4. [Built-in Guards](#built-in-guards)
-5. [Built-in Interceptors](#built-in-interceptors)
-6. [Custom Guards](#custom-guards)
-7. [Custom Interceptors](#custom-interceptors)
-8. [Execution Order](#execution-order)
+> Learn how to protect routes, transform data, add headers, log requests, and create custom middleware - all with clean, decorator-based syntax.
 
 ---
 
-## Overview
+## 📑 Table of Contents
 
-RestJS provides a powerful request/response processing pipeline:
+<details open>
+<summary><strong>Pipeline Topics</strong></summary>
+
+### Fundamentals
+- [Understanding the Pipeline](#overview) - How it works
+- [Guards vs Interceptors](#guards-vs-interceptors) - When to use each
+- [Execution Order](#execution-order) - Request flow
+- [Scope](#scope) - Global, controller, method level
+
+### Guards
+- [What are Guards?](#guards) - Authentication & authorization
+- [Built-in Guards](#built-in-guards) - JwtAuthGuard, etc.
+- [Custom Guards](#custom-guards) - Create your own
+- [Guard Examples](#guard-examples) - Real-world use cases
+
+### Interceptors
+- [What are Interceptors?](#interceptors) - Transform & enhance
+- [Built-in Interceptors](#built-in-interceptors) - CORS, Security, etc.
+- [Custom Interceptors](#custom-interceptors) - Build custom logic
+- [Interceptor Patterns](#interceptor-patterns) - Common patterns
+
+### Advanced
+- [Combining Multiple](#combining-guards-and-interceptors) - Use together
+- [Error Handling](#error-handling) - Handle failures
+- [Performance Impact](#performance-impact) - Optimization tips
+- [Testing](#testing) - Unit test guards/interceptors
+
+</details>
+
+---
+
+## 🎯 Overview
+
+<details open>
+<summary><strong>Understanding the Request Pipeline</strong></summary>
+
+RestJS processes every request through a **powerful, flexible pipeline**:
+
+### Visual Flow
 
 ```
-Request → Guards → Interceptors (before) → Handler → Interceptors (after) → Response
+┌─────────────┐
+│   Request   │
+└──────┬──────┘
+       ↓
+┌─────────────────────┐
+│   🛡️ Guards        │  ← Authentication, Authorization
+│   Can I access?    │     Returns: true (allow) or false (deny)
+└──────┬──────────────┘
+       ↓ (if allowed)
+┌─────────────────────┐
+│   🔄 Interceptors   │  ← Transform request, add headers
+│   (Before)          │     Modify incoming data
+└──────┬──────────────┘
+       ↓
+┌─────────────────────┐
+│   🎯 Route Handler  │  ← Your controller method
+│   (Your code)       │     Business logic executes
+└──────┬──────────────┘
+       ↓
+┌─────────────────────┐
+│   🔄 Interceptors   │  ← Transform response, add headers
+│   (After)           │     Modify outgoing data
+└──────┬──────────────┘
+       ↓
+┌─────────────┐
+│   Response  │
+└─────────────┘
 ```
 
-### Key Concepts
+### Real-World Example
 
-- **Guards**: Control access (authentication, authorization)
-- **Interceptors**: Transform requests/responses, add headers, logging
-- **Execution Order**: Guards → Interceptors → Handler
+```typescript
+@Controller('/api/users')
+export class UsersController {
+  
+  @Get('/:id')
+  @UseGuards(JwtAuthGuard)           // 1. Check JWT token
+  @UseInterceptors(                   
+    LoggingInterceptor,               // 2. Log request
+    CacheInterceptor                  // 3. Check cache
+  )
+  async getUser(@Param('id') id: string) {
+    return await this.userService.findById(id);  // 4. Execute
+  }
+  // 5. CacheInterceptor stores response
+  // 6. LoggingInterceptor logs response
+  // 7. Return to client
+}
+```
+
+**What happens:**
+1. ✅ `JwtAuthGuard` validates JWT token → Allow/Deny
+2. ✅ `LoggingInterceptor` logs: "GET /api/users/123 started"
+3. ✅ `CacheInterceptor` checks if response cached → return if found
+4. ✅ `getUser()` executes your business logic
+5. ✅ `CacheInterceptor` caches the response for next time
+6. ✅ `LoggingInterceptor` logs: "GET /api/users/123 completed (42ms)"
+7. ✅ Response sent to client
+
+</details>
+
+<details>
+<summary><strong>🆚 Guards vs Interceptors - When to use what?</strong></summary>
+
+| Feature | Guards | Interceptors |
+|---------|--------|--------------|
+| **Purpose** | Access control | Data transformation |
+| **Returns** | `boolean` (allow/deny) | Modified request/response |
+| **Timing** | Before everything | Before & after handler |
+| **Can modify response?** | No (only allow/deny) | Yes |
+| **Can modify request?** | No | Yes |
+| **Stops execution?** | Yes (if false) | No (unless throws) |
+| **Use for** | Auth, permissions | Logging, caching, headers |
+
+**Use Guards when:**
+- ✅ Checking authentication (is user logged in?)
+- ✅ Checking authorization (can user do this?)
+- ✅ Validating API keys
+- ✅ IP whitelisting
+- ✅ Feature flags
+
+**Use Interceptors when:**
+- ✅ Logging requests/responses
+- ✅ Transforming data format
+- ✅ Adding headers (CORS, security)
+- ✅ Caching responses
+- ✅ Measuring performance
+- ✅ Rate limiting
+
+**Example comparison:**
+
+```typescript
+// ✅ Good - Guard for access control
+@UseGuards(AdminGuard)  // Only admins can access
+@Delete('/users/:id')
+deleteUser() {}
+
+// ✅ Good - Interceptor for transformation
+@UseInterceptors(TransformInterceptor)  // Format response
+@Get('/users')
+getUsers() {}
+
+// ❌ Bad - Don't use interceptor for auth
+@UseInterceptors(AuthInterceptor)  // Wrong tool!
+@Get('/protected')
+getData() {}
+
+// ❌ Bad - Don't use guard for transformation
+@UseGuards(TransformGuard)  // Guards can't transform!
+@Get('/users')
+getUsers() {}
+```
+
+</details>
 
 ---
 

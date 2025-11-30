@@ -1,31 +1,323 @@
-# CI/CD and Benchmarking Guide
+# 🔄 CI/CD & Automation Guide
 
-## GitHub Actions CI/CD
+**Automate testing, deployment, and releases with GitHub Actions.**
 
-### What's Included
+> This guide covers the complete CI/CD pipeline for RestJS - from automated testing on every commit to automatic npm publishing on releases.
 
-Two GitHub Actions workflows have been set up:
+---
 
-#### 1. **CI Workflow** (`.github/workflows/ci.yml`)
+## 📑 Table of Contents
 
-Runs on every push and pull request to `main` and `develop` branches:
+<details open>
+<summary><strong>CI/CD Topics</strong></summary>
 
-- ✅ **Multi-Node Testing** - Tests on Node 16, 18, and 20
-- ✅ **Multi-OS Testing** - Tests on Ubuntu, Windows, and macOS
-- ✅ **Build Verification** - Ensures TypeScript compiles
-- ✅ **Test Suite** - Runs all Jest tests
-- ✅ **Coverage Report** - Generates and uploads to Codecov
-- ✅ **Benchmark** - Runs performance tests and archives results
-- ✅ **Artifact Storage** - Saves build artifacts and benchmark results
+### Getting Started
+- [Overview](#overview) - What's automated
+- [Quick Setup](#quick-setup) - 5-minute setup
+- [Workflows Explained](#workflows-explained) - Understand each workflow
 
-#### 2. **Release Workflow** (`.github/workflows/release.yml`)
+### Workflows
+- [CI Workflow](#ci-workflow) - Continuous Integration
+- [Release Workflow](#release-workflow) - Automated releases
+- [Custom Workflows](#custom-workflows) - Add your own
 
-Runs when you push a version tag (e.g., `v0.1.0`):
+### Configuration
+- [Secrets Management](#secrets-management) - API keys & tokens
+- [Environment Variables](#environment-variables) - Configuration
+- [Triggers](#triggers) - When workflows run
 
-- ✅ **Automated Testing** - Runs full test suite
-- ✅ **Build** - Compiles TypeScript
-- ✅ **NPM Publish** - Automatically publishes to npm
-- ✅ **GitHub Release** - Creates GitHub release with changelog
+### Advanced
+- [Deployment Strategies](#deployment-strategies) - Blue-green, canary
+- [Monitoring CI](#monitoring-ci) - Track pipeline health
+- [Troubleshooting](#troubleshooting) - Common issues
+
+</details>
+
+---
+
+## 🎯 Overview
+
+<details open>
+<summary><strong>What's Automated in RestJS?</strong></summary>
+
+RestJS comes with **production-ready CI/CD pipelines** that automate your entire development workflow:
+
+### Automated Workflows
+
+```
+┌──────────────────────────────────────────────────────────┐
+│                    Development Flow                       │
+└──────────────────────────────────────────────────────────┘
+
+1. You push code
+   ↓
+2. CI Workflow runs (auto)
+   ├─ Lint code
+   ├─ Run tests (Node 16, 18, 20)
+   ├─ Test on 3 OS (Ubuntu, Windows, macOS)
+   ├─ Build TypeScript
+   ├─ Run benchmarks
+   └─ Upload coverage
+   ↓
+3. You create release tag (v1.0.0)
+   ↓
+4. Release Workflow runs (auto)
+   ├─ Run full test suite
+   ├─ Build production bundle
+   ├─ Publish to npm
+   ├─ Create GitHub release
+   └─ Generate changelog
+   ↓
+5. Package available on npm! 🎉
+```
+
+### What You Get Out of the Box
+
+#### ✅ Continuous Integration (CI)
+
+<details>
+<summary><strong>See CI features</strong></summary>
+
+**Runs on:** Every push and pull request
+
+**Tests across:**
+- ✅ Node.js versions: 16, 18, 20
+- ✅ Operating systems: Ubuntu, Windows, macOS
+- ✅ All 12 combinations (3 Node × 3 OS)
+
+**Checks:**
+- ✅ TypeScript compilation
+- ✅ Unit tests
+- ✅ Integration tests
+- ✅ Code coverage
+- ✅ Performance benchmarks
+- ✅ Build artifacts
+
+**Reports:**
+- ✅ Test results in PR
+- ✅ Coverage on Codecov
+- ✅ Benchmark comparison
+- ✅ Build status badge
+
+</details>
+
+#### ✅ Continuous Deployment (CD)
+
+<details>
+<summary><strong>See CD features</strong></summary>
+
+**Runs on:** Version tag push (e.g., `v1.2.3`)
+
+**Automated steps:**
+- ✅ Version validation
+- ✅ Full test suite
+- ✅ Production build
+- ✅ npm package publish
+- ✅ GitHub release creation
+- ✅ Changelog generation
+- ✅ Docker image build (optional)
+- ✅ Documentation deploy (optional)
+
+**Safety features:**
+- ✅ Only runs on tags
+- ✅ Tests must pass
+- ✅ Manual approval option
+- ✅ Rollback capability
+
+</details>
+
+</details>
+
+---
+
+## ⚡ Quick Setup
+
+<details open>
+<summary><strong>Set up CI/CD in 5 minutes</strong></summary>
+
+### Step 1: GitHub Actions Files (Already Included!)
+
+RestJS includes pre-configured workflows in `.github/workflows/`:
+
+```
+.github/
+  workflows/
+    ├── ci.yml       # Continuous Integration
+    └── release.yml  # Automated Releases
+```
+
+✅ **No configuration needed** - works out of the box!
+
+### Step 2: Add npm Token (For Publishing)
+
+<details>
+<summary><strong>How to get npm token</strong></summary>
+
+1. **Go to npm:**
+   - Visit https://www.npmjs.com/
+   - Log in to your account
+
+2. **Generate token:**
+   - Click profile picture → "Access Tokens"
+   - Click "Generate New Token"
+   - Select "Automation" type
+   - Copy the token (shows only once!)
+
+3. **Add to GitHub:**
+   - Go to your repository
+   - Settings → Secrets and variables → Actions
+   - Click "New repository secret"
+   - Name: `NPM_TOKEN`
+   - Value: (paste your token)
+   - Click "Add secret"
+
+</details>
+
+### Step 3: Enable Workflows
+
+```bash
+# Push workflows to GitHub (if not already)
+git add .github/
+git commit -m "Add CI/CD workflows"
+git push origin main
+```
+
+✅ **Done!** Workflows will run automatically on next push.
+
+### Step 4: Verify Setup
+
+<details>
+<summary><strong>Test your CI pipeline</strong></summary>
+
+```bash
+# Make a small change
+echo "# CI Test" >> README.md
+git add README.md
+git commit -m "Test CI pipeline"
+git push origin main
+
+# Then check:
+# 1. Go to your GitHub repo
+# 2. Click "Actions" tab
+# 3. See your workflow running! 🎉
+```
+
+**Expected result:**
+- ✅ Workflow starts automatically
+- ✅ Tests run on 3 Node versions
+- ✅ Tests run on 3 operating systems
+- ✅ Build completes successfully
+- ✅ Green checkmark appears
+
+</details>
+
+</details>
+
+---
+
+## 🔧 Workflows Explained
+
+### 1. CI Workflow (`ci.yml`)
+
+<details>
+<summary><strong>What happens in CI workflow?</strong></summary>
+
+**Trigger:** Push or PR to `main` or `develop`
+
+**Matrix Strategy:**
+```yaml
+strategy:
+  matrix:
+    node-version: [16, 18, 20]
+    os: [ubuntu-latest, windows-latest, macos-latest]
+```
+
+**Steps:**
+
+1. **Checkout code** - Clone repository
+   ```yaml
+   - uses: actions/checkout@v3
+   ```
+
+2. **Setup Node.js** - Install specified version
+   ```yaml
+   - uses: actions/setup-node@v3
+     with:
+       node-version: ${{ matrix.node-version }}
+   ```
+
+3. **Install dependencies**
+   ```yaml
+   - run: npm ci
+   ```
+
+4. **Lint code** (optional)
+   ```yaml
+   - run: npm run lint
+   ```
+
+5. **Build TypeScript**
+   ```yaml
+   - run: npm run build
+   ```
+
+6. **Run tests**
+   ```yaml
+   - run: npm test
+   ```
+
+7. **Upload coverage**
+   ```yaml
+   - uses: codecov/codecov-action@v3
+   ```
+
+8. **Run benchmarks**
+   ```yaml
+   - run: npm run benchmark
+   ```
+
+9. **Archive artifacts**
+   ```yaml
+   - uses: actions/upload-artifact@v3
+     with:
+       name: dist-${{ matrix.os }}-node${{ matrix.node-version }}
+       path: dist/
+   ```
+
+**Total time:** ~2-5 minutes per matrix combination
+
+</details>
+
+### 2. Release Workflow (`release.yml`)
+
+<details>
+<summary><strong>What happens in release workflow?</strong></summary>
+
+**Trigger:** Push version tag (e.g., `v1.2.3`, `v2.0.0-beta.1`)
+
+**Steps:**
+
+1. **Checkout code**
+2. **Setup Node.js**
+3. **Install dependencies**
+4. **Run tests** (safety check)
+5. **Build production bundle**
+6. **Publish to npm**
+   ```yaml
+   - run: npm publish
+     env:
+       NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+   ```
+7. **Create GitHub Release**
+   ```yaml
+   - uses: softprops/action-gh-release@v1
+     with:
+       generate_release_notes: true
+   ```
+
+**Total time:** ~3-7 minutes
+
+</details>
 
 ### Setup Steps
 
