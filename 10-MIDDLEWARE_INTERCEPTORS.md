@@ -12,24 +12,28 @@
 <summary><strong>Pipeline Topics</strong></summary>
 
 ### Fundamentals
+
 - [Understanding the Pipeline](#overview) - How it works
 - [Guards vs Interceptors](#guards-vs-interceptors) - When to use each
 - [Execution Order](#execution-order) - Request flow
 - [Scope](#scope) - Global, controller, method level
 
 ### Guards
+
 - [What are Guards?](#guards) - Authentication & authorization
 - [Built-in Guards](#built-in-guards) - JwtAuthGuard, etc.
 - [Custom Guards](#custom-guards) - Create your own
 - [Guard Examples](#guard-examples) - Real-world use cases
 
 ### Interceptors
+
 - [What are Interceptors?](#interceptors) - Transform & enhance
 - [Built-in Interceptors](#built-in-interceptors) - CORS, Security, etc.
 - [Custom Interceptors](#custom-interceptors) - Build custom logic
 - [Interceptor Patterns](#interceptor-patterns) - Common patterns
 
 ### Advanced
+
 - [Combining Multiple](#combining-guards-and-interceptors) - Use together
 - [Error Handling](#error-handling) - Handle failures
 - [Performance Impact](#performance-impact) - Optimization tips
@@ -81,17 +85,16 @@ RestJS processes every request through a **powerful, flexible pipeline**:
 ### Real-World Example
 
 ```typescript
-@Controller('/api/users')
+@Controller("/api/users")
 export class UsersController {
-  
-  @Get('/:id')
-  @UseGuards(JwtAuthGuard)           // 1. Check JWT token
-  @UseInterceptors(                   
-    LoggingInterceptor,               // 2. Log request
-    CacheInterceptor                  // 3. Check cache
+  @Get("/:id")
+  @UseGuards(JwtAuthGuard) // 1. Check JWT token
+  @UseInterceptors(
+    LoggingInterceptor, // 2. Log request
+    CacheInterceptor // 3. Check cache
   )
-  async getUser(@Param('id') id: string) {
-    return await this.userService.findById(id);  // 4. Execute
+  async getUser(@Param("id") id: string) {
+    return await this.userService.findById(id); // 4. Execute
   }
   // 5. CacheInterceptor stores response
   // 6. LoggingInterceptor logs response
@@ -100,6 +103,7 @@ export class UsersController {
 ```
 
 **What happens:**
+
 1. ✅ `JwtAuthGuard` validates JWT token → Allow/Deny
 2. ✅ `LoggingInterceptor` logs: "GET /api/users/123 started"
 3. ✅ `CacheInterceptor` checks if response cached → return if found
@@ -113,17 +117,18 @@ export class UsersController {
 <details>
 <summary><strong>🆚 Guards vs Interceptors - When to use what?</strong></summary>
 
-| Feature | Guards | Interceptors |
-|---------|--------|--------------|
-| **Purpose** | Access control | Data transformation |
-| **Returns** | `boolean` (allow/deny) | Modified request/response |
-| **Timing** | Before everything | Before & after handler |
-| **Can modify response?** | No (only allow/deny) | Yes |
-| **Can modify request?** | No | Yes |
-| **Stops execution?** | Yes (if false) | No (unless throws) |
-| **Use for** | Auth, permissions | Logging, caching, headers |
+| Feature                  | Guards                 | Interceptors              |
+| ------------------------ | ---------------------- | ------------------------- |
+| **Purpose**              | Access control         | Data transformation       |
+| **Returns**              | `boolean` (allow/deny) | Modified request/response |
+| **Timing**               | Before everything      | Before & after handler    |
+| **Can modify response?** | No (only allow/deny)   | Yes                       |
+| **Can modify request?**  | No                     | Yes                       |
+| **Stops execution?**     | Yes (if false)         | No (unless throws)        |
+| **Use for**              | Auth, permissions      | Logging, caching, headers |
 
 **Use Guards when:**
+
 - ✅ Checking authentication (is user logged in?)
 - ✅ Checking authorization (can user do this?)
 - ✅ Validating API keys
@@ -131,6 +136,7 @@ export class UsersController {
 - ✅ Feature flags
 
 **Use Interceptors when:**
+
 - ✅ Logging requests/responses
 - ✅ Transforming data format
 - ✅ Adding headers (CORS, security)

@@ -12,21 +12,25 @@
 <summary><strong>CI/CD Topics</strong></summary>
 
 ### Getting Started
+
 - [Overview](#overview) - What's automated
 - [Quick Setup](#quick-setup) - 5-minute setup
 - [Workflows Explained](#workflows-explained) - Understand each workflow
 
 ### Workflows
+
 - [CI Workflow](#ci-workflow) - Continuous Integration
 - [Release Workflow](#release-workflow) - Automated releases
 - [Custom Workflows](#custom-workflows) - Add your own
 
 ### Configuration
+
 - [Secrets Management](#secrets-management) - API keys & tokens
 - [Environment Variables](#environment-variables) - Configuration
 - [Triggers](#triggers) - When workflows run
 
 ### Advanced
+
 - [Deployment Strategies](#deployment-strategies) - Blue-green, canary
 - [Monitoring CI](#monitoring-ci) - Track pipeline health
 - [Troubleshooting](#troubleshooting) - Common issues
@@ -81,11 +85,13 @@ RestJS comes with **production-ready CI/CD pipelines** that automate your entire
 **Runs on:** Every push and pull request
 
 **Tests across:**
+
 - ✅ Node.js versions: 16, 18, 20
 - ✅ Operating systems: Ubuntu, Windows, macOS
 - ✅ All 12 combinations (3 Node × 3 OS)
 
 **Checks:**
+
 - ✅ TypeScript compilation
 - ✅ Unit tests
 - ✅ Integration tests
@@ -94,6 +100,7 @@ RestJS comes with **production-ready CI/CD pipelines** that automate your entire
 - ✅ Build artifacts
 
 **Reports:**
+
 - ✅ Test results in PR
 - ✅ Coverage on Codecov
 - ✅ Benchmark comparison
@@ -109,6 +116,7 @@ RestJS comes with **production-ready CI/CD pipelines** that automate your entire
 **Runs on:** Version tag push (e.g., `v1.2.3`)
 
 **Automated steps:**
+
 - ✅ Version validation
 - ✅ Full test suite
 - ✅ Production build
@@ -119,6 +127,7 @@ RestJS comes with **production-ready CI/CD pipelines** that automate your entire
 - ✅ Documentation deploy (optional)
 
 **Safety features:**
+
 - ✅ Only runs on tags
 - ✅ Tests must pass
 - ✅ Manual approval option
@@ -154,10 +163,12 @@ RestJS includes pre-configured workflows in `.github/workflows/`:
 <summary><strong>How to get npm token</strong></summary>
 
 1. **Go to npm:**
+
    - Visit https://www.npmjs.com/
    - Log in to your account
 
 2. **Generate token:**
+
    - Click profile picture → "Access Tokens"
    - Click "Generate New Token"
    - Select "Automation" type
@@ -203,6 +214,7 @@ git push origin main
 ```
 
 **Expected result:**
+
 - ✅ Workflow starts automatically
 - ✅ Tests run on 3 Node versions
 - ✅ Tests run on 3 operating systems
@@ -225,6 +237,7 @@ git push origin main
 **Trigger:** Push or PR to `main` or `develop`
 
 **Matrix Strategy:**
+
 ```yaml
 strategy:
   matrix:
@@ -235,11 +248,13 @@ strategy:
 **Steps:**
 
 1. **Checkout code** - Clone repository
+
    ```yaml
    - uses: actions/checkout@v3
    ```
 
 2. **Setup Node.js** - Install specified version
+
    ```yaml
    - uses: actions/setup-node@v3
      with:
@@ -247,31 +262,37 @@ strategy:
    ```
 
 3. **Install dependencies**
+
    ```yaml
    - run: npm ci
    ```
 
 4. **Lint code** (optional)
+
    ```yaml
    - run: npm run lint
    ```
 
 5. **Build TypeScript**
+
    ```yaml
    - run: npm run build
    ```
 
 6. **Run tests**
+
    ```yaml
    - run: npm test
    ```
 
 7. **Upload coverage**
+
    ```yaml
    - uses: codecov/codecov-action@v3
    ```
 
 8. **Run benchmarks**
+
    ```yaml
    - run: npm run benchmark
    ```

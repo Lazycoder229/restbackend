@@ -12,22 +12,26 @@
 <summary><strong>Module Topics</strong></summary>
 
 ### Fundamentals
+
 - [What are Modules?](#what-are-modules) - Core concepts
 - [Basic Module Structure](#basic-module-structure) - Your first module
 - [Module Properties](#module-properties) - Deep dive into @Module()
 
 ### Organization
+
 - [File Structure](#file-structure) - Best practices
 - [Module Organization](#module-organization) - Folder layout
 - [Naming Conventions](#naming-conventions) - Standards
 
 ### Advanced
+
 - [Creating Feature Modules](#creating-a-complete-feature-module) - Complete example
 - [Module Dependencies](#module-dependencies) - Imports & exports
 - [Shared Modules](#shared-modules) - Reusable modules
 - [Circular Dependencies](#circular-dependencies) - How to avoid
 
 ### Production
+
 - [Best Practices](#best-practices) - Production checklist
 - [Performance Tips](#performance-tips) - Optimization
 
@@ -45,6 +49,7 @@
 ### The Problem Modules Solve
 
 **❌ Without modules:**
+
 ```typescript
 // main.ts - Everything in one file (messy!)
 class UsersController {}
@@ -57,6 +62,7 @@ class OrdersService {}
 ```
 
 **✅ With modules:**
+
 ```typescript
 // Organized, maintainable, testable
 @Module({ controllers: [UsersController], providers: [UsersService] })
@@ -73,12 +79,12 @@ class AppModule {}
 
 A module groups four types of components:
 
-| Component | Purpose | Example |
-|-----------|---------|---------|
-| **Controllers** | Handle HTTP requests | `UsersController` |
-| **Providers** | Business logic (services, repos) | `UsersService`, `EmailService` |
-| **Imports** | Other modules to use | `DatabaseModule`, `AuthModule` |
-| **Exports** | Share providers with other modules | Export `UsersService` for other modules |
+| Component       | Purpose                            | Example                                 |
+| --------------- | ---------------------------------- | --------------------------------------- |
+| **Controllers** | Handle HTTP requests               | `UsersController`                       |
+| **Providers**   | Business logic (services, repos)   | `UsersService`, `EmailService`          |
+| **Imports**     | Other modules to use               | `DatabaseModule`, `AuthModule`          |
+| **Exports**     | Share providers with other modules | Export `UsersService` for other modules |
 
 ### Real-World Analogy
 
@@ -109,13 +115,17 @@ Each department (module) has clear responsibilities and can share services with 
 **Create a module when you have:**
 
 ✅ **Related functionality**
+
 ```typescript
 // Good: User authentication & management together
-@Module({ /* auth + user management */ })
+@Module({
+  /* auth + user management */
+})
 class UsersModule {}
 ```
 
 ✅ **Feature boundaries**
+
 ```typescript
 // Good: Each major feature gets a module
 class OrdersModule {}
@@ -124,6 +134,7 @@ class ShippingModule {}
 ```
 
 ✅ **Reusable services**
+
 ```typescript
 // Good: Shared utilities
 @Module({ exports: [EmailService, LoggerService] })
@@ -131,6 +142,7 @@ class SharedModule {}
 ```
 
 ❌ **Don't over-modularize:**
+
 ```typescript
 // Bad: Too granular
 class UserCreateModule {}

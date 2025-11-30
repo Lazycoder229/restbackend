@@ -12,11 +12,13 @@
 <summary><strong>Database Topics</strong></summary>
 
 ### Getting Started
+
 - [Introduction](#introduction) - What's included
 - [Setup & Configuration](#setup--configuration) - Connect to database
 - [Choosing Your Approach](#choosing-your-approach) - QueryBuilder vs Repository
 
 ### QueryBuilder
+
 - [Basic Queries](#querybuilder) - SELECT, INSERT, UPDATE, DELETE
 - [Where Clauses](#where-clauses) - Filtering data
 - [Joins](#joins) - Combining tables
@@ -24,12 +26,14 @@
 - [Raw Queries](#raw-queries) - When you need SQL
 
 ### Repository Pattern
+
 - [Creating Repositories](#repository-pattern) - Active Record
 - [CRUD Operations](#crud-operations) - Full examples
 - [Custom Methods](#custom-methods) - Extend functionality
 - [Relations](#relations) - Handle relationships
 
 ### Advanced
+
 - [Transactions](#transactions) - ACID compliance
 - [Query Optimization](#query-optimization) - Performance tips
 - [Migration Strategies](#migration-strategies) - Schema management
@@ -60,6 +64,7 @@ const users = await queryBuilder
 ```
 
 **Best for:**
+
 - ✅ Complex queries with multiple joins
 - ✅ Dynamic query building
 - ✅ Performance-critical operations
@@ -79,6 +84,7 @@ await user.save();
 ```
 
 **Best for:**
+
 - ✅ Simple CRUD operations
 - ✅ Working with entities/models
 - ✅ Rapid development
@@ -100,6 +106,7 @@ await user.save();
 ```
 
 **All built on:**
+
 - MySQL2 with connection pooling
 - Parameterized queries (SQL injection protection)
 - Promise-based async/await
@@ -110,14 +117,14 @@ await user.save();
 <details>
 <summary><strong>🆚 QueryBuilder vs Repository - Which to use?</strong></summary>
 
-| Feature | QueryBuilder | Repository |
-|---------|-------------|------------|
-| **Complexity** | Handles complex joins | Better for simple queries |
-| **Learning Curve** | SQL knowledge helpful | Easy for beginners |
-| **Type Safety** | Moderate | Strong (TypeScript generics) |
-| **Flexibility** | Maximum control | Opinionated structure |
-| **Performance** | Optimized queries | Good for most cases |
-| **Code Style** | Fluent API | Object-oriented |
+| Feature            | QueryBuilder          | Repository                   |
+| ------------------ | --------------------- | ---------------------------- |
+| **Complexity**     | Handles complex joins | Better for simple queries    |
+| **Learning Curve** | SQL knowledge helpful | Easy for beginners           |
+| **Type Safety**    | Moderate              | Strong (TypeScript generics) |
+| **Flexibility**    | Maximum control       | Opinionated structure        |
+| **Performance**    | Optimized queries     | Good for most cases          |
+| **Code Style**     | Fluent API            | Object-oriented              |
 
 **Example comparison:**
 
@@ -152,10 +159,10 @@ import { DatabaseService } from "@restsjsapp/rest";
 
 async function bootstrap() {
   const app = await RestFactory.create(AppModule);
-  
+
   // Get database service
   const db = app.get<DatabaseService>(DatabaseService);
-  
+
   // Initialize connection
   await db.initialize({
     host: process.env.DB_HOST || "localhost",
@@ -163,11 +170,11 @@ async function bootstrap() {
     user: process.env.DB_USER || "root",
     password: process.env.DB_PASSWORD || "",
     database: process.env.DB_NAME || "myapp",
-    connectionLimit: 10,  // Connection pool size
+    connectionLimit: 10, // Connection pool size
   });
-  
+
   console.log("✅ Database connected");
-  
+
   await app.listen(3000);
 }
 ```

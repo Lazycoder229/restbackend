@@ -12,18 +12,21 @@
 <summary><strong>Performance Topics</strong></summary>
 
 ### Understanding Performance
+
 - [Performance Overview](#performance-overview) - Why RestJS is fast
 - [Benchmarks](#benchmarks) - Real-world numbers
 - [Architecture](#architecture) - Design decisions
 - [Request Flow](#request-flow) - How requests are processed
 
 ### Optimizations
+
 - [Built-in Optimizations](#built-in-optimizations) - What's included
 - [Database Performance](#database-performance) - Query optimization
 - [Caching Strategies](#caching-strategies) - Speed up responses
 - [Memory Management](#memory-management) - Reduce GC pressure
 
 ### Production
+
 - [Production Optimization](#production-optimization) - Deploy fast
 - [Monitoring & Profiling](#monitoring) - Find bottlenecks
 - [Load Testing](#load-testing) - Benchmark your app
@@ -70,9 +73,10 @@ RestJS achieves **industry-leading performance** through aggressive optimization
 <summary><strong>🚄 Route Caching - O(1) Lookups</strong></summary>
 
 **Problem:** Traditional frameworks check routes on every request
+
 ```typescript
 // ❌ Slow - loops through routes each request
-routes.forEach(route => {
+routes.forEach((route) => {
   if (route.method === method && route.path.match(url)) {
     return route.handler();
   }
@@ -80,6 +84,7 @@ routes.forEach(route => {
 ```
 
 **Solution:** Pre-compiled route map
+
 ```typescript
 // ✅ Fast - O(1) hash map lookup
 const routes = routeCache.get(method); // instant
@@ -99,9 +104,9 @@ Instead of resolving handlers on each request, RestJS stores direct function ref
 // Compiled once at startup
 const compiled = {
   controller: controllerInstance,
-  method: controllerInstance.getUsers,  // Direct reference!
+  method: controllerInstance.getUsers, // Direct reference!
   guards: [guardInstance],
-  interceptors: [interceptorInstance]
+  interceptors: [interceptorInstance],
 };
 
 // On each request - just call it
