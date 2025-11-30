@@ -113,7 +113,7 @@ class HelloController {
   sayHello() {
     return { message: "Hello RestJS!" };
   }
-  
+
   @Get("/:name")
   greet(@Param("name") name: string) {
     return { message: `Hello, ${name}!` };
@@ -129,10 +129,10 @@ class AppModule {}
 // 3. Bootstrap Application
 async function bootstrap() {
   const app = await RestFactory.create(AppModule);
-  
+
   // 🔥 Enable hot reload (dev mode)
   app.enableHotReload();
-  
+
   await app.listen(3000);
 }
 

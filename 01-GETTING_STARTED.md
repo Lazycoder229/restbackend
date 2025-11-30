@@ -24,15 +24,18 @@
 <summary><strong>Click to see system requirements</strong></summary>
 
 ### Required
+
 - **Node.js** v14 or higher ([Download](https://nodejs.org/))
 - **npm** or **yarn** package manager
 - **TypeScript** basic knowledge ([Learn basics in 5 mins](https://www.typescriptlang.org/docs/handbook/typescript-in-5-minutes.html))
 
 ### Optional (for database features)
+
 - **MySQL** 5.7+ or 8.0+ ([Download](https://dev.mysql.com/downloads/mysql/))
 - **MySQL Workbench** (GUI tool for database management)
 
 ### Check your setup
+
 ```bash
 node --version    # Should be v14+
 npm --version     # Should be 6+
@@ -104,6 +107,7 @@ npm install
 ```
 
 **What gets installed:**
+
 - `typescript` - TypeScript compiler
 - `reflect-metadata` - Decorator metadata support
 - `@types/node` - Node.js type definitions
@@ -142,6 +146,7 @@ ls dist/
 A **Controller** handles HTTP requests. Think of it as a set of routes grouped together.
 
 **Example:** A `UserController` handles all `/users` routes like:
+
 - `GET /users` - Get all users
 - `GET /users/:id` - Get one user
 - `POST /users` - Create user
@@ -152,13 +157,12 @@ A **Controller** handles HTTP requests. Think of it as a set of routes grouped t
 
 ```typescript
 // src/main.ts
-import "reflect-metadata";  // Required for decorators to work
+import "reflect-metadata"; // Required for decorators to work
 import { RestFactory, Controller, Get, Module, Param } from "./index";
 
 // Step 1: Define a Controller
-@Controller("/hello")  // All routes in this controller start with /hello
+@Controller("/hello") // All routes in this controller start with /hello
 class HelloController {
-  
   // GET /hello
   @Get()
   sayHello() {
@@ -174,7 +178,7 @@ class HelloController {
 
 // Step 2: Create a Module (organizes your app)
 @Module({
-  controllers: [HelloController],  // Register controllers here
+  controllers: [HelloController], // Register controllers here
 })
 class AppModule {}
 
@@ -217,6 +221,7 @@ npm run dev
 ```
 
 **Expected output:**
+
 ```
 Application is running on: http://localhost:3000
 🔥 Hot reload enabled - watching for changes...
@@ -245,6 +250,7 @@ curl http://localhost:3000/hello/John
 <summary><strong>Using browser</strong></summary>
 
 Open these URLs in your browser:
+
 - http://localhost:3000/hello
 - http://localhost:3000/hello/YourName
 
@@ -329,6 +335,7 @@ export class UsersService {
 The `constructor(private usersService: UsersService)` automatically injects the service!
 
 **How it works:**
+
 1. Framework sees `@Injectable()` on `UsersService`
 2. Creates instance of `UsersService`
 3. Injects it into controller constructor
@@ -343,7 +350,7 @@ The `constructor(private usersService: UsersService)` automatically injects the 
 import { Controller, Get, Post, Param, Body } from "./index";
 import { UsersService } from "./users.service";
 
-@Controller("/users")  // Base path: /users
+@Controller("/users") // Base path: /users
 export class UsersController {
   // Dependency Injection: Service auto-injected by framework
   constructor(private usersService: UsersService) {}
@@ -375,14 +382,14 @@ export class UsersController {
 <details>
 <summary><strong>🔍 Understanding decorators</strong></summary>
 
-| Decorator | Purpose | Example |
-|-----------|---------|---------|
-| `@Controller(path)` | Define base route | `@Controller("/users")` |
-| `@Get(path)` | Handle GET requests | `@Get("/:id")` |
-| `@Post(path)` | Handle POST requests | `@Post()` |
-| `@Param(name)` | Extract URL parameter | `@Param("id")` |
-| `@Body()` | Extract request body | `@Body()` |
-| `@Query(name)` | Extract query parameter | `@Query("search")` |
+| Decorator           | Purpose                 | Example                 |
+| ------------------- | ----------------------- | ----------------------- |
+| `@Controller(path)` | Define base route       | `@Controller("/users")` |
+| `@Get(path)`        | Handle GET requests     | `@Get("/:id")`          |
+| `@Post(path)`       | Handle POST requests    | `@Post()`               |
+| `@Param(name)`      | Extract URL parameter   | `@Param("id")`          |
+| `@Body()`           | Extract request body    | `@Body()`               |
+| `@Query(name)`      | Extract query parameter | `@Query("search")`      |
 
 </details>
 
@@ -407,6 +414,7 @@ AppModule (root)
 ```
 
 **Benefits:**
+
 - ✅ Better code organization
 - ✅ Clear separation of concerns
 - ✅ Easier testing
@@ -476,6 +484,7 @@ curl -X POST http://localhost:3000/users \
 - Database created
 
 **Quick MySQL setup:**
+
 ```bash
 # Windows (via installer)
 # Download from: https://dev.mysql.com/downloads/mysql/

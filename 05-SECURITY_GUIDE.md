@@ -12,17 +12,20 @@
 <summary><strong>Security Topics</strong></summary>
 
 ### Authentication & Authorization
+
 - [JWT Authentication](#jwt-authentication) - Token-based auth
 - [Password Security](#password-security) - bcrypt hashing
 - [Route Protection](#route-protection) - Guards & middleware
 
 ### Security Features
+
 - [CORS Configuration](#cors-configuration) - Cross-origin requests
 - [Security Headers](#security-headers) - Helmet-like protection
 - [Rate Limiting](#rate-limiting) - Prevent abuse
 - [Input Validation](#input-validation) - Sanitize user input
 
 ### Production
+
 - [Best Practices](#best-practices) - Security checklist
 - [Common Vulnerabilities](#common-vulnerabilities) - OWASP Top 10
 
@@ -38,11 +41,13 @@
 **JSON Web Token (JWT)** is a standard for securely transmitting information between parties.
 
 **Structure:**
+
 ```
 header.payload.signature
 ```
 
 **Example:**
+
 ```
 eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.
 eyJ1c2VySWQiOjEsImVtYWlsIjoiam9obkBleGFtcGxlLmNvbSJ9.
@@ -50,12 +55,14 @@ SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
 ```
 
 **Benefits:**
+
 - ✅ Stateless (no server-side session storage)
 - ✅ Self-contained (includes user data)
 - ✅ Secure (cryptographically signed)
 - ✅ Mobile-friendly
 
 **Use cases:**
+
 - Authentication tokens
 - API authorization
 - Single Sign-On (SSO)

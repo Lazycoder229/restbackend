@@ -12,16 +12,19 @@
 <summary><strong>Quick Navigation</strong></summary>
 
 ### Core
+
 - [RestFactory](#restfactory) - Application creation
 - [RestApplication](#restapplication) - Main app instance
 
 ### Decorators
+
 - [Class Decorators](#class-decorators) - `@Controller`, `@Module`, `@Injectable`
 - [Method Decorators](#method-decorators) - `@Get`, `@Post`, `@Put`, `@Delete`, etc.
 - [Parameter Decorators](#parameter-decorators) - `@Param`, `@Body`, `@Query`, etc.
 - [Enhancement Decorators](#enhancement-decorators) - `@UseGuards`, `@UseInterceptors`
 
 ### Built-in Features
+
 - [DatabaseService](#databaseservice) - MySQL connection pooling
 - [SecurityService](#securityservice) - JWT & password hashing
 - [QueryBuilder](#querybuilder) - SQL query builder
@@ -29,6 +32,7 @@
 - [Logger](#logger) - Logging utility
 
 ### Advanced
+
 - [Guards](#guards) - Route protection
 - [Interceptors](#interceptors) - Request/response transformation
 - [Interfaces](#interfaces) - TypeScript interfaces
@@ -53,6 +57,7 @@ The `RestFactory` is your entry point - it creates and bootstraps your applicati
 Creates and initializes a new application instance.
 
 **Parameters:**
+
 - `module` - Root module class decorated with `@Module()`
 
 **Returns:** `Promise<RestApplication>` - Initialized application instance
@@ -99,6 +104,7 @@ bootstrap();
 The `RestApplication` manages your HTTP server, routes, and dependency injection.
 
 **Key responsibilities:**
+
 - HTTP request handling
 - Route matching and execution
 - Middleware/interceptor pipeline
@@ -111,6 +117,7 @@ The `RestApplication` manages your HTTP server, routes, and dependency injection
 Starts the HTTP server on the specified port.
 
 **Parameters:**
+
 - `port` - Port number (1024-65535)
 
 **Returns:** `Promise<void>` - Resolves when server is listening
@@ -139,7 +146,7 @@ try {
 }
 
 // ❌ Avoid - Hardcoded port in production
-await app.listen(3000);  // What if port is taken?
+await app.listen(3000); // What if port is taken?
 ```
 
 </details>
@@ -151,6 +158,7 @@ await app.listen(3000);  // What if port is taken?
 Sets a global prefix for all routes.
 
 **Parameters:**
+
 - `prefix` - URL prefix (e.g., `/api`, `/v1`)
 
 **Example:**
@@ -168,16 +176,19 @@ app.setGlobalPrefix("/api");
 <summary><strong>📝 Common use cases</strong></summary>
 
 **API versioning:**
+
 ```typescript
 app.setGlobalPrefix("/api/v1");
 ```
 
 **Multi-tenant applications:**
+
 ```typescript
 app.setGlobalPrefix(`/${tenantId}`);
 ```
 
 **Microservices:**
+
 ```typescript
 app.setGlobalPrefix("/user-service");
 ```
@@ -191,6 +202,7 @@ app.setGlobalPrefix("/user-service");
 Enables automatic server restart on file changes (development only).
 
 **Parameters:**
+
 - `options?` - Optional configuration
 
 **Example:**
@@ -204,21 +216,22 @@ app.enableHotReload({
   watchPaths: ["src", "config"],
   debounceMs: 500,
   ignore: ["*.log", "*.tmp"],
-  onReload: () => console.log("Reloading...")
+  onReload: () => console.log("Reloading..."),
 });
 ```
 
 <details>
 <summary><strong>⚙️ Configuration options</strong></summary>
 
-| Option | Type | Default | Description |
-|--------|------|---------|-------------|
-| `watchPaths` | `string[]` | `["src"]` | Directories to watch |
-| `debounceMs` | `number` | `300` | Wait time for multiple changes |
-| `ignore` | `string[]` | `["node_modules", "dist"]` | Patterns to ignore |
-| `onReload` | `() => void` | - | Custom hook before reload |
+| Option       | Type         | Default                    | Description                    |
+| ------------ | ------------ | -------------------------- | ------------------------------ |
+| `watchPaths` | `string[]`   | `["src"]`                  | Directories to watch           |
+| `debounceMs` | `number`     | `300`                      | Wait time for multiple changes |
+| `ignore`     | `string[]`   | `["node_modules", "dist"]` | Patterns to ignore             |
+| `onReload`   | `() => void` | -                          | Custom hook before reload      |
 
 **File types watched:**
+
 - `.ts` - TypeScript files
 - `.js` - JavaScript files
 - `.json` - JSON configuration
@@ -234,6 +247,7 @@ app.enableHotReload({
 Retrieves a provider from the dependency injection container.
 
 **Parameters:**
+
 - `token` - Class or injection token
 
 **Returns:** `T` - Instance of the requested provider
@@ -249,6 +263,7 @@ await dbService.query("SELECT * FROM users");
 <summary><strong>🎯 When to use</strong></summary>
 
 **Good use cases:**
+
 - Manual service access in bootstrap
 - Testing and debugging
 - Custom initialization logic
@@ -256,20 +271,21 @@ await dbService.query("SELECT * FROM users");
 ```typescript
 async function bootstrap() {
   const app = await RestFactory.create(AppModule);
-  
+
   // Initialize database on startup
   const db = app.get<DatabaseService>(DatabaseService);
   await db.initialize({
     host: "localhost",
     user: "root",
-    database: "myapp"
+    database: "myapp",
   });
-  
+
   await app.listen(3000);
 }
 ```
 
 **Avoid:**
+
 - Inside controllers (use constructor injection instead)
 - For regular dependency access (defeats DI purpose)
 
