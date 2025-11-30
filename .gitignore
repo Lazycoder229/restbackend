@@ -1,0 +1,17 @@
+node_modules/
+dist/
+*.log
+.env
+.DS_Store
+*.js.map
+*.d.ts.map
+coverage/
+.vscode/
+.idea/
+benchmark/results/*.json
+benchmark/results/*.md
+!benchmark/README.md
+uploads/
+*.tsbuildinfo
+.npm
+.eslintcache
