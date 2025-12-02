@@ -1,6 +1,6 @@
 import { Injectable } from "../decorators/injectable.decorator";
 import {
-  RestInterceptor,
+  FynixInterceptor,
   ExecutionContext,
   CallHandler,
 } from "../common/interfaces";
@@ -9,7 +9,7 @@ import {
  * Built-in Security Headers Interceptor (Helmet-like)
  */
 @Injectable()
-export class SecurityHeadersInterceptor implements RestInterceptor {
+export class SecurityHeadersInterceptor implements FynixInterceptor {
   async intercept(context: ExecutionContext, next: CallHandler): Promise<any> {
     const response = context.getResponse();
 

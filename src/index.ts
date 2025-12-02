@@ -1,6 +1,6 @@
 // Core exports
-export { RestFactory } from "./core/rest-factory";
-export { RestApplication } from "./core/rest-application";
+export { FynixFactory } from "./core/fynix-factory";
+export { FynixApplication } from "./core/fynix-application";
 export { Container } from "./core/container";
 export { ModuleContainer } from "./core/module-container";
 export { HotReloadOptions } from "./core/hot-reload";

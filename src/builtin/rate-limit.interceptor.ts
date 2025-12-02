@@ -1,6 +1,6 @@
 import { Injectable } from "../decorators/injectable.decorator";
 import {
-  RestInterceptor,
+  FynixInterceptor,
   ExecutionContext,
   CallHandler,
   HttpException,
@@ -10,7 +10,7 @@ import {
  * Built-in Rate Limiting Interceptor
  */
 @Injectable()
-export class RateLimitInterceptor implements RestInterceptor {
+export class RateLimitInterceptor implements FynixInterceptor {
   private requests = new Map<string, { count: number; resetTime: number }>();
   private maxRequests: number = 100;
   private windowMs: number = 60000; // 1 minute

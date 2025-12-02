@@ -38,7 +38,7 @@ export interface CanActivate {
 /**
  * Interceptor interface - transforms responses and adds cross-cutting logic
  */
-export interface RestInterceptor {
+export interface FynixInterceptor {
   intercept(context: ExecutionContext, next: CallHandler): Promise<any> | any;
 }
 

@@ -1,6 +1,6 @@
 import { Injectable } from "../decorators/injectable.decorator";
 import {
-  RestInterceptor,
+  FynixInterceptor,
   ExecutionContext,
   CallHandler,
 } from "../common/interfaces";
@@ -9,7 +9,7 @@ import {
  * Built-in CORS Interceptor
  */
 @Injectable()
-export class CorsInterceptor implements RestInterceptor {
+export class CorsInterceptor implements FynixInterceptor {
   private allowedOrigins: string[] = ["*"];
   private allowedMethods: string[] = [
     "GET",

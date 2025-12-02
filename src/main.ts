@@ -5,11 +5,11 @@ import "reflect-metadata";
  */
 async function bootstrap() {
   // TODO: Create your AppModule and use it here
-  // const app = await RestFactory.create(AppModule);
+  // const app = await FynixFactory.create(AppModule);
   // app.setGlobalPrefix("/api");
   // await app.listen(3000);
 
-  console.log("RestJS Framework - Ready to use!");
+  console.log("FynixJS Framework - Ready to use!");
   console.log("Create your AppModule and uncomment the code above.");
 }
 

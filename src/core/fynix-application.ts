@@ -13,13 +13,13 @@ import {
 import {
   ExecutionContext,
   CanActivate,
-  RestInterceptor,
+  FynixInterceptor,
 } from "../common/interfaces";
 import { GlobalExceptionFilter } from "../builtin/logger";
 import { HotReloadManager, HotReloadOptions } from "./hot-reload";
 
 /**
- * Rest Application instance
+ * Fynix Application instance
  */
 interface CompiledRoute {
   controller: any;
@@ -37,11 +37,11 @@ interface CompiledRoute {
   isSimpleParam: boolean;
 }
 
-export class RestApplication {
+export class FynixApplication {
   private server: http.Server;
   private moduleContainer: ModuleContainer;
   private globalPrefix: string = "";
-  private globalInterceptors: RestInterceptor[] = [];
+  private globalInterceptors: FynixInterceptor[] = [];
   private exceptionFilter: GlobalExceptionFilter;
   private routeCache: Map<string, CompiledRoute[]> = new Map();
   private paramMetadataCache: Map<string, ParameterMetadata[]> = new Map();
@@ -70,7 +70,7 @@ export class RestApplication {
   /**
    * Register global interceptors
    */
-  useGlobalInterceptors(...interceptors: RestInterceptor[]): void {
+  useGlobalInterceptors(...interceptors: FynixInterceptor[]): void {
     this.globalInterceptors.push(...interceptors);
   }
 
@@ -275,8 +275,8 @@ export class RestApplication {
     const routes = this.routeCache.get(method);
     if (!routes) {
       res.statusCode = 404;
-      res.setHeader("Content-Type", RestApplication.JSON_TYPE);
-      res.end(RestApplication.NOT_FOUND_RESPONSE);
+      res.setHeader("Content-Type", FynixApplication.JSON_TYPE);
+      res.end(FynixApplication.NOT_FOUND_RESPONSE);
       return;
     }
 
@@ -328,8 +328,8 @@ export class RestApplication {
 
     // No route found
     res.statusCode = 404;
-    res.setHeader("Content-Type", RestApplication.JSON_TYPE);
-    res.end(RestApplication.NOT_FOUND_RESPONSE);
+    res.setHeader("Content-Type", FynixApplication.JSON_TYPE);
+    res.end(FynixApplication.NOT_FOUND_RESPONSE);
   }
 
   /**
@@ -349,7 +349,7 @@ export class RestApplication {
       if (!paramMetadata || paramMetadata.length === 0) {
         // No parameters - ultra fast direct call
         res.statusCode = 200;
-        res.setHeader("Content-Type", RestApplication.JSON_TYPE);
+        res.setHeader("Content-Type", FynixApplication.JSON_TYPE);
         const result = await route.handler.call(route.controller);
         res.end(
           typeof result === "object" ? JSON.stringify(result) : String(result)
@@ -378,7 +378,7 @@ export class RestApplication {
             ? req
             : res;
         res.statusCode = 200;
-        res.setHeader("Content-Type", RestApplication.JSON_TYPE);
+        res.setHeader("Content-Type", FynixApplication.JSON_TYPE);
         const result = await route.handler.call(route.controller, arg);
         res.end(
           typeof result === "object" ? JSON.stringify(result) : String(result)
@@ -388,7 +388,7 @@ export class RestApplication {
 
       const args = this.extractParametersInline(paramMetadata, req, res);
       res.statusCode = 200;
-      res.setHeader("Content-Type", RestApplication.JSON_TYPE);
+      res.setHeader("Content-Type", FynixApplication.JSON_TYPE);
       const result = await route.handler.apply(route.controller, args);
       res.end(
         typeof result === "object" ? JSON.stringify(result) : String(result)
@@ -401,8 +401,8 @@ export class RestApplication {
       const canActivate = await this.executeGuardsFast(route.guards, req, res);
       if (!canActivate) {
         res.statusCode = 403;
-        res.setHeader("Content-Type", RestApplication.JSON_TYPE);
-        res.end(RestApplication.FORBIDDEN_RESPONSE);
+        res.setHeader("Content-Type", FynixApplication.JSON_TYPE);
+        res.end(FynixApplication.FORBIDDEN_RESPONSE);
         return;
       }
     }
@@ -423,7 +423,7 @@ export class RestApplication {
       : await route.handler.apply(route.controller, args);
 
     res.statusCode = 200;
-    res.setHeader("Content-Type", RestApplication.JSON_TYPE);
+    res.setHeader("Content-Type", FynixApplication.JSON_TYPE);
     res.end(
       typeof result === "object" ? JSON.stringify(result) : String(result)
     );
@@ -574,7 +574,7 @@ export class RestApplication {
 
     let finalHandler = handler;
     for (const InterceptorClass of interceptors.slice().reverse()) {
-      const interceptor: RestInterceptor =
+      const interceptor: FynixInterceptor =
         this.moduleContainer.resolve(InterceptorClass);
       const currentHandler = finalHandler;
       finalHandler = async () => {
