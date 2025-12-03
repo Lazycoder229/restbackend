@@ -20,6 +20,13 @@ export { Injectable } from "./decorators/injectable.decorator";
 export { Module } from "./decorators/module.decorator";
 export { Entity } from "./decorators/entity.decorator";
 export {
+  Column,
+  PrimaryGeneratedColumn,
+  Index,
+  Unique,
+  ForeignKey,
+} from "./decorators/column.decorator";
+export {
   Param,
   Query,
   Body,
@@ -45,6 +52,7 @@ export {
   QueryBuilder,
   Repository,
   BaseEntity,
+  SchemaSyncService,
   Logger,
   GlobalExceptionFilter,
   LoggingInterceptor,

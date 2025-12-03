@@ -1,4 +1,5 @@
 import "reflect-metadata";
+import { COLUMN_METADATA, ColumnMetadata } from "./column.decorator";
 
 export const ENTITY_METADATA = "entity:metadata";
 
@@ -8,6 +9,7 @@ export const ENTITY_METADATA = "entity:metadata";
 export interface EntityMetadata {
   tableName: string;
   primaryKey?: string;
+  columns?: ColumnMetadata[];
 }
 
 /**
@@ -32,15 +34,21 @@ export function Entity(
   options?: { primaryKey?: string }
 ): ClassDecorator {
   return (target: any) => {
+    // Get column metadata from @Column decorators
+    const columns: ColumnMetadata[] =
+      Reflect.getMetadata(COLUMN_METADATA, target) || [];
+
     const metadata: EntityMetadata = {
       tableName,
       primaryKey: options?.primaryKey || "id",
+      columns,
     };
 
     Reflect.defineMetadata(ENTITY_METADATA, metadata, target);
 
-    // Store table name on the class itself for easy access
+    // Store table name and columns on the class itself for easy access
     target.tableName = tableName;
     target.primaryKey = options?.primaryKey || "id";
+    target.columns = columns;
   };
 }

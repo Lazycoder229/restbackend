@@ -1,17 +1,17 @@
-# RestJS Framework
+# FynixJS Framework
 
 <p align="center">
   <strong>🚀 Lightweight TypeScript Framework with Built-in Everything</strong>
 </p>
 
 <p align="center">
-  Build REST APIs faster with decorators, dependency injection, and zero configuration.<br>
-  Security, database, and ORM included out of the box!
+  Build modern APIs faster with decorators, dependency injection, and zero configuration.<br>
+  Security, database, ORM, and hot reload included out of the box!
 </p>
 
 ---
 
-## ✨ Why RestJS?
+## ✨ Why FynixJS?
 
 ```typescript
 // This is all you need! No setup, no extra packages.
@@ -35,405 +35,188 @@ export class UsersController {
 | **🔐 Security**             | ✅ Built-in | JWT, bcrypt, password validation, XSS protection |
 | **💾 Database**             | ✅ Built-in | MySQL with connection pooling                    |
 | **🗂️ ORM**                  | ✅ Built-in | Query Builder + Repository + Active Record       |
-| **📊 Entity/Models**        | ✅ Built-in | NestJS-like @Entity decorator & BaseEntity       |
+| **📊 Entity/Models**        | ✅ Built-in | TypeORM-like @Entity decorator & BaseEntity      |
+| **🔄 Schema Sync**          | ✅ Built-in | Auto-create tables from decorators (no SQL!)     |
 | **🛡️ CORS**                 | ✅ Built-in | Configurable cross-origin support                |
 | **⚡ Rate Limiting**        | ✅ Built-in | Prevent API abuse                                |
 | **🔒 Security Headers**     | ✅ Built-in | Helmet-like protection                           |
 | **💉 Dependency Injection** | ✅ Built-in | IoC container with decorators                    |
 | **📦 Modular**              | ✅ Built-in | NestJS-like module system                        |
-| **🚀 High Performance**     | ✅ Built-in | Faster than Fastify, 5x faster than Express      |
-
-### ⚡ Performance
-
-RestJS outperforms industry-leading frameworks:
-
-| Framework  | Requests/sec | Latency  | Performance vs RestJS |
-| ---------- | ------------ | -------- | --------------------- |
-| **RestJS** | **25,825**   | **36ms** | **100% ⚡**           |
-| Fastify    | 21,131       | 43ms     | 82%                   |
-| Express    | 4,857        | 195ms    | 19%                   |
-
-✅ **22% faster than Fastify**  
-✅ **5.3x faster than Express**  
-✅ **Route caching & handler optimization built-in**
-
-[See detailed benchmarks →](./11-PERFORMANCE.md)
-
-## 🚀 Quick Start
-
-<details open>
-<summary><strong>⚡ Fastest Way - Use CLI Generator</strong></summary>
-
-```bash
-# Create new project instantly
-npx @restsjsapp/create my-app
-
-# Choose template:
-# • basic - Hello world
-# • api   - CRUD with users
-# • full  - Complete app with auth & database
-
-cd my-app
-npm install
-npm start
-
-# 🎉 Server running at http://localhost:3000
-```
-
-</details>
-
-<details>
-<summary><strong>🔧 Manual Installation</strong></summary>
-
-```bash
-# Clone repository
-git clone https://github.com/Lazycoder229/restbackend.git
-cd restbackend
-
-# Install dependencies
-npm install
-
-# Build framework
-npm run build
-```
-
-</details>
+| **🚀 High Performance**     | ✅ Built-in | Optimized routing and request handling           |
 
 ---
 
-### 📝 Your First API (60 seconds)
+## 🚀 Quick Start
+
+### Installation
+
+```bash
+npm install @fynixjs/fynix
+```
+
+### Basic Example
 
 ```typescript
-// src/main.ts
-import { RestFactory, Controller, Get, Module } from "@restsjsapp/rest";
+import { FynixFactory, Controller, Get, Module } from "@fynixjs/fynix";
 
-// 1. Define Controller
-@Controller("/hello")
-class HelloController {
-  @Get()
-  sayHello() {
-    return { message: "Hello RestJS!" };
-  }
-
-  @Get("/:name")
-  greet(@Param("name") name: string) {
-    return { message: `Hello, ${name}!` };
+@Controller("/api")
+export class AppController {
+  @Get("/hello")
+  getHello() {
+    return { message: "Hello FynixJS!" };
   }
 }
 
-// 2. Create Module
 @Module({
-  controllers: [HelloController],
+  controllers: [AppController],
 })
-class AppModule {}
+export class AppModule {}
 
-// 3. Bootstrap Application
 async function bootstrap() {
-  const app = await RestFactory.create(AppModule);
-
-  // 🔥 Enable hot reload (dev mode)
-  app.enableHotReload();
-
+  const app = await FynixFactory.create(AppModule);
+  await app.init();
   await app.listen(3000);
+  console.log("🚀 Server running at http://localhost:3000");
 }
 
 bootstrap();
 ```
 
-<details>
-<summary><strong>🧪 Test Your API</strong></summary>
+### Test It
 
 ```bash
-# Terminal 1: Start server
-npm run dev
-
-# Terminal 2: Test endpoints
-curl http://localhost:3000/hello
-# Response: {"message":"Hello RestJS!"}
-
-curl http://localhost:3000/hello/World
-# Response: {"message":"Hello, World!"}
+curl http://localhost:3000/api/hello
+# Response: {"message":"Hello FynixJS!"}
 ```
 
-</details>
+---
 
-```bash
-npm run dev
-curl http://localhost:3000/hello
-```
+## 📚 Documentation
 
-## 📚 Complete Documentation
+| #   | Topic                                                    | Description                          |
+| --- | -------------------------------------------------------- | ------------------------------------ |
+| 1   | **[Getting Started](./01-GETTING_STARTED.md)**           | Installation & first app             |
+| 2   | **[Core Concepts](./02-CORE_CONCEPTS.md)**               | Architecture & DI container          |
+| 3   | **[Controllers & Routing](./03-CONTROLLERS.md)**         | HTTP methods & request handling      |
+| 4   | **[Modules](./04-MODULES.md)**                           | Module system & organization         |
+| 5   | **[Database & ORM](./05-DATABASE.md)**                   | QueryBuilder, Repository, BaseEntity |
+| 6   | **[Security](./06-SECURITY.md)**                         | JWT, bcrypt, guards, validation      |
+| 7   | **[Guards & Interceptors](./07-GUARDS_INTERCEPTORS.md)** | Request pipeline customization       |
+| 8   | **[Decorators Reference](./08-DECORATORS.md)**           | Complete decorator API               |
+| 9   | **[API Reference](./09-API_REFERENCE.md)**               | Full API documentation               |
+| 10  | **[Examples](./10-EXAMPLES.md)**                         | Real-world code examples             |
 
-### Core Documentation (Read in Order)
+---
 
-| #   | Guide                                            | Description                               |
-| --- | ------------------------------------------------ | ----------------------------------------- |
-| 1   | **[Getting Started](./01-GETTING_STARTED.md)**   | Complete setup and your first application |
-| 2   | **[API Reference](./02-API_REFERENCE.md)**       | Complete decorator and method reference   |
-| 3   | **[Creating Modules](./03-CREATING_MODULES.md)** | Build modular applications with DI        |
-| 4   | **[ORM Guide](./04-ORM_GUIDE.md)**               | Database queries and repository pattern   |
-| 5   | **[Security Guide](./05-SECURITY_GUIDE.md)**     | Authentication, authorization, JWT        |
-| 6   | **[Deployment](./06-DEPLOYMENT.md)**             | Production deployment strategies          |
-| 7   | **[CI/CD Guide](./07-CI_CD_GUIDE.md)**           | Automated testing and deployment          |
-| 8   | **[Contributing](./08-CONTRIBUTING.md)**         | How to contribute to RestJS               |
-| 9   | **[Changelog](./09-CHANGELOG.md)**               | Version history and updates               |
-
-### Advanced Topics
-
-| #   | Guide                                                            | Description                                 |
-| --- | ---------------------------------------------------------------- | ------------------------------------------- |
-| 10  | **[Middleware & Interceptors](./10-MIDDLEWARE_INTERCEPTORS.md)** | Guards, interceptors, and request pipeline  |
-| 11  | **[Performance](./11-PERFORMANCE.md)**                           | Optimization techniques and benchmarks      |
-| 12  | **[Entities Guide](./docs/ENTITIES_GUIDE.md)**                   | Entity decorators and Active Record pattern |
-| 13  | **[Entity Examples](./docs/ENTITY_EXAMPLES.md)**                 | Complete MVC examples with entities         |
-
-## 🎓 Learn by Example
-
-### Example 1: Simple CRUD
-
-```typescript
-// users.repository.ts
-@Injectable()
-export class UsersRepository extends Repository<User> {
-  protected tableName = "users";
-}
-
-// users.service.ts
-@Injectable()
-export class UsersService {
-  constructor(private repo: UsersRepository) {}
-
-  async getAll() {
-    return await this.repo.findAll();
-  }
-}
-
-// users.controller.ts
-@Controller("/users")
-export class UsersController {
-  constructor(private service: UsersService) {}
-
-  @Get()
-  async findAll() {
-    return await this.service.getAll();
-  }
-
-  @Post()
-  async create(@Body() data: any) {
-    return await this.service.create(data);
-  }
-}
-```
-
-### Example 2: Authentication
-
-```typescript
-// auth.service.ts
-@Injectable()
-export class AuthService {
-  constructor(private security: SecurityService) {}
-
-  async register(email: string, password: string) {
-    const hash = await this.security.hashPassword(password);
-    // Save to database
-    return { success: true };
-  }
-
-  async login(email: string, password: string) {
-    // Verify credentials
-    const token = this.security.generateToken({ email }, "24h");
-    return { token };
-  }
-}
-
-// Protected route
-@Controller("/profile")
-export class ProfileController {
-  @Get()
-  @UseGuards(JwtAuthGuard) // Requires JWT token
-  getProfile(@Req() req: any) {
-    return req.user; // Decoded from JWT
-  }
-}
-```
-
-### Example 3: Database Queries
-
-```typescript
-// Using Repository Pattern
-const users = await repo.findAll();
-const user = await repo.findById(1);
-await repo.create({ name: "John", email: "john@test.com" });
-await repo.update(1, { name: "Jane" });
-
-// Using Query Builder
-const activeUsers = await qb
-  .table("users")
-  .where("status", "active")
-  .orderBy("created_at", "DESC")
-  .limit(10)
-  .get();
-
-// Using Raw SQL (still available!)
-const users = await db.query("SELECT * FROM users WHERE id = ?", [1]);
-```
-
-## 🆚 Comparison
-
-### vs Express
-
-- ✅ Built-in dependency injection
-- ✅ Decorators for cleaner code
-- ✅ Modular architecture
-- ✅ Built-in security and database
-
-### vs NestJS
-
-- ✅ Simpler and lighter
-- ✅ Faster setup (no CLI needed)
-- ✅ Everything built-in (no separate packages)
-- ✅ Zero configuration
-
-### vs Fastify/Koa
-
-- ✅ Decorators and DI included
-- ✅ Enterprise patterns built-in
-- ✅ TypeScript-first design
-- ✅ Full-stack ready
-
-## 🏗️ Project Structure
-
-```
-my-app/
-├── src/
-│   ├── modules/
-│   │   ├── users/
-│   │   │   ├── users.controller.ts
-│   │   │   ├── users.service.ts
-│   │   │   ├── users.repository.ts
-│   │   │   └── users.module.ts
-│   │   └── auth/
-│   │       ├── auth.controller.ts
-│   │       ├── auth.service.ts
-│   │       └── auth.module.ts
-│   ├── app.module.ts
-│   ├── main.ts
-│   └── index.ts (re-export framework)
-├── dist/
-├── package.json
-└── tsconfig.json
-```
-
-## ⚙️ Core Concepts
-
-### Decorators
-
-```typescript
-@Controller('/path')    // Define controller
-@Get(), @Post(), ...    // HTTP methods
-@Injectable()           // Mark for DI
-@Module()               // Define module
-@UseGuards()            // Apply guards
-@UseInterceptors()      // Apply interceptors
-@Body(), @Param(), ...  // Extract request data
-```
+## 🔥 Key Features
 
 ### Dependency Injection
 
 ```typescript
 @Injectable()
 export class UserService {
-  constructor(
-    private db: DatabaseService, // Auto-injected
-    private security: SecurityService // Auto-injected
-  ) {}
+  constructor(private db: DatabaseService) {}
+}
+
+@Controller("/users")
+export class UserController {
+  constructor(private userService: UserService) {} // Auto-injected!
 }
 ```
 
-### Modules
+### Entity/Active Record Pattern
 
 ```typescript
-@Module({
-  imports: [AuthModule], // Import other modules
-  controllers: [UsersController], // HTTP handlers
-  providers: [UsersService], // Injectable services
-  exports: [UsersService], // Share with other modules
-})
-export class UsersModule {}
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  BaseEntity,
+} from "@fynixjs/fynix";
+
+@Entity("users")
+export class User extends BaseEntity {
+  @PrimaryGeneratedColumn()
+  id: number;
+
+  @Column()
+  name: string;
+
+  @Column()
+  email: string;
+}
+
+// Usage
+const users = await User.findAll();
+const user = await User.findById(1);
+
+const newUser = new User();
+newUser.name = "John";
+await newUser.save();
 ```
 
-## 📊 Performance
+### Guards & Authentication
 
-- **Fast startup**: < 1 second
-- **Low memory**: ~50MB base
-- **Native HTTP**: Built on Node.js http module
-- **Connection pooling**: Efficient database connections
-- **TypeScript**: Compile-time optimization
-- **Benchmarked**: Competitive with Express and Fastify (run `npm run benchmark`)
-
-## 🔄 CI/CD
-
-GitHub Actions workflows included:
-
-- ✅ Automated testing on Node 16/18/20
-- ✅ Multi-OS testing (Ubuntu/Windows/macOS)
-- ✅ Coverage reporting
-- ✅ Performance benchmarks
-- ✅ Automated npm publishing
-
-See [CI_CD_GUIDE.md](./CI_CD_GUIDE.md) for setup instructions.
-
-## 🧪 Testing & Benchmarking
-
-### Run Tests
-
-```bash
-npm test                 # Run all tests
-npm run test:watch       # Watch mode
-npm run test:coverage    # With coverage report
+```typescript
+@Controller("/admin")
+@UseGuards(JwtAuthGuard)
+export class AdminController {
+  @Get("/dashboard")
+  getDashboard() {
+    return { message: "Protected route!" };
+  }
+}
 ```
 
-### Performance Benchmarks
+### Interceptors
 
-```bash
-npm run benchmark        # Compare with Express & Fastify
+```typescript
+@Controller("/api")
+@UseInterceptors(LoggingInterceptor)
+export class ApiController {
+  @Get("/data")
+  getData() {
+    return { data: "example" };
+  }
+}
 ```
 
-See [CI_CD_GUIDE.md](./CI_CD_GUIDE.md) for CI/CD setup and benchmarking details.
+---
 
-## 🔧 Requirements
+## 💡 Philosophy
 
-- Node.js >= 14
-- TypeScript >= 5.0
-- MySQL >= 5.7 (optional, only if using database)
+FynixJS is designed to:
+
+- ✅ **Minimize boilerplate** - Focus on business logic, not configuration
+- ✅ **Be production-ready** - Security, database, and ORM included
+- ✅ **Stay lightweight** - No unnecessary dependencies
+- ✅ **Be familiar** - Inspired by NestJS and Express
+- ✅ **Be fast** - Optimized routing and request handling
+
+---
 
 ## 🤝 Contributing
 
-Contributions are welcome! See [CONTRIBUTING.md](./CONTRIBUTING.md) for guidelines.
+Contributions are welcome! Please read our [Contributing Guide](./CONTRIBUTING.md) for details.
 
-**Quick links:**
-
-- Report bugs via [GitHub Issues](https://github.com/Lazycoder229/restbackend/issues)
-- Submit pull requests
-- Improve documentation
-- Share feedback
+---
 
 ## 📝 License
 
-MIT License - see [LICENSE](./LICENSE) file
+MIT License - see [LICENSE](./LICENSE) file for details.
 
-## 👨‍💻 Author
+---
+
+## 👤 Author
 
 **Resty Gonzales**  
 Email: gonzalesresty32@gmail.com  
 GitHub: [@Lazycoder229](https://github.com/Lazycoder229)
 
-## 🌟 Support
-
-If you find RestJS helpful, please give it a ⭐ on GitHub!
-
 ---
 
-<p align="center">
-  <strong>Built with ❤️ using TypeScript, Decorators, and Dependency Injection</strong>
-</p>
+## ⭐ Support
+
+If you find FynixJS helpful, please give it a ⭐ on GitHub!
+
+**Happy Coding! 🚀**

@@ -8,6 +8,7 @@ export { RateLimitInterceptor } from "./rate-limit.interceptor";
 export { QueryBuilder } from "./query-builder";
 export { Repository } from "./repository";
 export { BaseEntity } from "./base-entity";
+export { SchemaSyncService } from "./schema-sync.service";
 export {
   Logger,
   GlobalExceptionFilter,
