@@ -1,4 +1,4 @@
-# RestJS Framework
+# FynixJS Framework
 
 <p align="center">
   <strong>🚀 Lightweight TypeScript Framework with Built-in Everything</strong>
@@ -11,7 +11,7 @@
 
 ---
 
-## ✨ Why RestJS?
+## ✨ Why FynixJS?
 
 ```typescript
 // This is all you need! No setup, no extra packages.
