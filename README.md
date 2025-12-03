@@ -37,6 +37,7 @@ export class UsersController {
 | **🗂️ ORM**                  | ✅ Built-in | Query Builder + Repository + Active Record       |
 | **📊 Entity/Models**        | ✅ Built-in | TypeORM-like @Entity decorator & BaseEntity      |
 | **🔄 Schema Sync**          | ✅ Built-in | Auto-create tables from decorators (no SQL!)     |
+| **📁 Static Files**         | ✅ Built-in | Serve HTML, CSS, JS, images with caching         |
 | **🛡️ CORS**                 | ✅ Built-in | Configurable cross-origin support                |
 | **⚡ Rate Limiting**        | ✅ Built-in | Prevent API abuse                                |
 | **🔒 Security Headers**     | ✅ Built-in | Helmet-like protection                           |
@@ -179,6 +180,26 @@ export class ApiController {
     return { data: "example" };
   }
 }
+```
+
+### Static Files
+
+```typescript
+import { StaticFilesInterceptor } from "@fynixjs/fynix";
+
+const app = await FynixFactory.create(AppModule);
+
+// Serve static files from 'public' directory
+app.useGlobalInterceptors(
+  new StaticFilesInterceptor({
+    rootDir: "public",
+    prefix: "/static",
+    maxAge: 86400, // Cache for 1 day
+  })
+);
+
+await app.listen(3000);
+// Access: http://localhost:3000/static/index.html
 ```
 
 ---

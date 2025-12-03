@@ -908,11 +908,241 @@ CREATE TABLE users (
 
 ---
 
+## 📁 Static Files & Frontend Serving
+
+Serve static HTML, CSS, JavaScript, images, and other assets.
+
+### Basic Static File Server
+
+```typescript
+import {
+  FynixFactory,
+  Module,
+  Controller,
+  Get,
+  StaticFilesInterceptor,
+} from "@fynixjs/fynix";
+
+@Controller("/api")
+export class ApiController {
+  @Get("/health")
+  health() {
+    return { status: "ok", timestamp: new Date() };
+  }
+}
+
+@Module({
+  controllers: [ApiController],
+})
+export class AppModule {}
+
+async function bootstrap() {
+  const app = await FynixFactory.create(AppModule);
+
+  // Serve static files from 'public' directory
+  app.useGlobalInterceptors(
+    new StaticFilesInterceptor({
+      rootDir: "public",
+      prefix: "/static",
+      maxAge: 86400, // Cache for 1 day
+    })
+  );
+
+  await app.listen(3000);
+  console.log("🚀 Server running at http://localhost:3000");
+  console.log("📁 Static files: http://localhost:3000/static/");
+}
+
+bootstrap();
+```
+
+### Directory Structure
+
+```
+project/
+├── public/
+│   ├── index.html
+│   ├── css/
+│   │   └── style.css
+│   ├── js/
+│   │   └── app.js
+│   └── images/
+│       └── logo.png
+└── src/
+    ├── app.module.ts
+    └── main.ts
+```
+
+### Example Frontend (public/index.html)
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FynixJS App</title>
+    <link rel="stylesheet" href="/static/css/style.css" />
+  </head>
+  <body>
+    <div class="container">
+      <img src="/static/images/logo.png" alt="Logo" class="logo" />
+      <h1>Welcome to FynixJS!</h1>
+      <button id="fetchBtn">Fetch Data</button>
+      <div id="result"></div>
+    </div>
+    <script src="/static/js/app.js"></script>
+  </body>
+</html>
+```
+
+### Frontend JavaScript (public/js/app.js)
+
+```javascript
+document.getElementById("fetchBtn").addEventListener("click", async () => {
+  try {
+    const response = await fetch("/api/health");
+    const data = await response.json();
+    document.getElementById("result").innerHTML = `
+      <p>Status: ${data.status}</p>
+      <p>Time: ${data.timestamp}</p>
+    `;
+  } catch (error) {
+    console.error("Error:", error);
+  }
+});
+```
+
+### Multiple Static Directories
+
+```typescript
+async function bootstrap() {
+  const app = await FynixFactory.create(AppModule);
+
+  // Public assets (CSS, JS, images)
+  app.useGlobalInterceptors(
+    new StaticFilesInterceptor({
+      rootDir: "public",
+      prefix: "/static",
+      maxAge: 86400,
+    }),
+
+    // User uploads
+    new StaticFilesInterceptor({
+      rootDir: "uploads",
+      prefix: "/uploads",
+      maxAge: 0, // No caching
+    }),
+
+    // Documentation
+    new StaticFilesInterceptor({
+      rootDir: "docs",
+      prefix: "/docs",
+      enableDirectoryListing: true,
+    })
+  );
+
+  await app.listen(3000);
+}
+```
+
+### Custom 404 Page
+
+```typescript
+app.useGlobalInterceptors(
+  new StaticFilesInterceptor({
+    rootDir: "public",
+    prefix: "/static",
+    notFoundPage: "404.html",
+  })
+);
+```
+
+**Create `public/404.html`:**
+
+```html
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>404 - Page Not Found</title>
+    <style>
+      body {
+        font-family: sans-serif;
+        text-align: center;
+        padding: 50px;
+        background: #f5f5f5;
+      }
+      h1 {
+        color: #dc3545;
+        font-size: 3rem;
+      }
+      a {
+        color: #007bff;
+        text-decoration: none;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>404</h1>
+    <p>The page you're looking for doesn't exist.</p>
+    <a href="/">← Go Home</a>
+  </body>
+</html>
+```
+
+### Serve React/Vue/Angular SPA
+
+```typescript
+import { Controller, Get, Res } from "@fynixjs/fynix";
+import * as path from "path";
+import * as fs from "fs";
+
+@Controller()
+export class SpaController {
+  // Serve index.html for all non-API routes
+  @Get("*")
+  serveSPA(@Res() res: any) {
+    const indexPath = path.join(process.cwd(), "public", "index.html");
+    const html = fs.readFileSync(indexPath, "utf-8");
+    res.setHeader("Content-Type", "text/html");
+    res.end(html);
+  }
+}
+
+@Module({
+  controllers: [SpaController, ApiController],
+})
+export class AppModule {}
+
+async function bootstrap() {
+  const app = await FynixFactory.create(AppModule);
+
+  // Serve bundled assets
+  app.useGlobalInterceptors(
+    new StaticFilesInterceptor({
+      rootDir: "public",
+      prefix: "/static",
+      maxAge: 31536000, // 1 year for production
+    })
+  );
+
+  // API routes get priority
+  app.setGlobalPrefix("/api");
+
+  await app.listen(3000);
+}
+```
+
+**See [Static Files Guide](./12-STATIC_FILES.md) for complete documentation!**
+
+---
+
 ## 📚 Next Steps
 
 - [Getting Started](./01-GETTING_STARTED.md)
 - [API Reference](./09-API_REFERENCE.md)
 - [Core Concepts](./02-CORE_CONCEPTS.md)
+- [Static Files](./12-STATIC_FILES.md)
 
 ---
 

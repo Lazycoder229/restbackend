@@ -5,6 +5,7 @@ export { JwtAuthGuard } from "./jwt-auth.guard";
 export { CorsInterceptor } from "./cors.interceptor";
 export { SecurityHeadersInterceptor } from "./security-headers.interceptor";
 export { RateLimitInterceptor } from "./rate-limit.interceptor";
+export { StaticFilesInterceptor } from "./static-files.interceptor";
 export { QueryBuilder } from "./query-builder";
 export { Repository } from "./repository";
 export { BaseEntity } from "./base-entity";

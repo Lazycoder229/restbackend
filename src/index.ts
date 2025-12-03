@@ -49,6 +49,7 @@ export {
   CorsInterceptor,
   SecurityHeadersInterceptor,
   RateLimitInterceptor,
+  StaticFilesInterceptor,
   QueryBuilder,
   Repository,
   BaseEntity,
