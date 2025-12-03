@@ -1,4 +1,3 @@
-import { Injectable } from "../decorators/injectable.decorator";
 import {
   FynixInterceptor,
   ExecutionContext,
@@ -120,7 +119,6 @@ export interface StaticFilesOptions {
  * );
  * ```
  */
-@Injectable()
 export class StaticFilesInterceptor implements FynixInterceptor {
   private rootDir: string;
   private prefix: string;
