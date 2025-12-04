@@ -29,21 +29,29 @@ export class UsersController {
 
 ### 🎯 Built-in Features (Zero Installation Required)
 
-| Feature                     | Status      | Description                                      |
-| --------------------------- | ----------- | ------------------------------------------------ |
-| **🔥 Hot Reload**           | ✅ Built-in | Auto-restart on file changes (zero config)       |
-| **🔐 Security**             | ✅ Built-in | JWT, bcrypt, password validation, XSS protection |
-| **💾 Database**             | ✅ Built-in | MySQL with connection pooling                    |
-| **🗂️ ORM**                  | ✅ Built-in | Query Builder + Repository + Active Record       |
-| **📊 Entity/Models**        | ✅ Built-in | TypeORM-like @Entity decorator & BaseEntity      |
-| **🔄 Schema Sync**          | ✅ Built-in | Auto-create tables from decorators (no SQL!)     |
-| **📁 Static Files**         | ✅ Built-in | Serve HTML, CSS, JS, images with caching         |
-| **🛡️ CORS**                 | ✅ Built-in | Configurable cross-origin support                |
-| **⚡ Rate Limiting**        | ✅ Built-in | Prevent API abuse                                |
-| **🔒 Security Headers**     | ✅ Built-in | Helmet-like protection                           |
-| **💉 Dependency Injection** | ✅ Built-in | IoC container with decorators                    |
-| **📦 Modular**              | ✅ Built-in | NestJS-like module system                        |
-| **🚀 High Performance**     | ✅ Built-in | Optimized routing and request handling           |
+| Feature                     | Status      | Description                                       |
+| --------------------------- | ----------- | ------------------------------------------------- |
+| **🔥 Hot Reload**           | ✅ Built-in | Auto-restart on file changes (zero config)        |
+| **🔐 Security**             | ✅ Built-in | JWT, bcrypt, password validation, XSS protection  |
+| **💾 Database**             | ✅ Built-in | MySQL with connection pooling                     |
+| **🗂️ ORM**                  | ✅ Built-in | Query Builder + Repository + Active Record        |
+| **📊 Entity/Models**        | ✅ Built-in | TypeORM-like @Entity decorator & BaseEntity       |
+| **🔄 Schema Sync**          | ✅ Built-in | Auto-create tables from decorators (no SQL!)      |
+| **📁 Static Files**         | ✅ Built-in | Serve HTML, CSS, JS, images with caching          |
+| **✅ Input Validation**     | ✅ Built-in | Decorator-based validation (like class-validator) |
+| **🚨 Exception Filters**    | ✅ Built-in | Custom error handling with built-in exceptions    |
+| **📤 File Upload**          | ✅ Built-in | Multipart/form-data handling                      |
+| **📄 Pagination**           | ✅ Built-in | Easy pagination helpers                           |
+| **⚙️ Configuration**        | ✅ Built-in | Type-safe config service with validation          |
+| **🗜️ Compression**          | ✅ Built-in | Automatic gzip/deflate compression                |
+| **🔄 Graceful Shutdown**    | ✅ Built-in | Cleanup hooks and signal handling                 |
+| **📝 Enhanced Logging**     | ✅ Built-in | Log levels, colors, structured logging            |
+| **🛡️ CORS**                 | ✅ Built-in | Configurable cross-origin support                 |
+| **⚡ Rate Limiting**        | ✅ Built-in | Prevent API abuse                                 |
+| **🔒 Security Headers**     | ✅ Built-in | Helmet-like protection                            |
+| **💉 Dependency Injection** | ✅ Built-in | IoC container with decorators                     |
+| **📦 Modular**              | ✅ Built-in | NestJS-like module system                         |
+| **🚀 High Performance**     | ✅ Built-in | Optimized routing and request handling            |
 
 ---
 

@@ -47,6 +47,8 @@ export class FynixApplication {
   private paramMetadataCache: Map<string, ParameterMetadata[]> = new Map();
   private hotReloadManager: HotReloadManager | null = null;
   private hotReloadOptions: HotReloadOptions = { enabled: false };
+  private shutdownHooks: Array<() => Promise<void>> = [];
+  private isShuttingDown: boolean = false;
   private static readonly NOT_FOUND_RESPONSE = Buffer.from(
     '{"message":"Not Found","statusCode":404}'
   );
@@ -58,6 +60,7 @@ export class FynixApplication {
   constructor(private rootModule: any) {
     this.moduleContainer = new ModuleContainer();
     this.exceptionFilter = new GlobalExceptionFilter();
+    this.setupGracefulShutdown();
   }
 
   /**
@@ -240,8 +243,6 @@ export class FynixApplication {
 
     return new Promise((resolve) => {
       this.server.listen(port, () => {
-        console.log(`Application is running on: http://localhost:${port}`);
-
         // Start hot reload if enabled
         if (this.hotReloadOptions.enabled) {
           this.hotReloadManager = new HotReloadManager(
@@ -270,6 +271,30 @@ export class FynixApplication {
   ): Promise<void> {
     const method = req.method!;
     const url = req.url!;
+
+    // Execute global interceptors first (for static files, etc.)
+    if (this.globalInterceptors.length > 0) {
+      const context: ExecutionContext = {
+        getRequest: () => req as any,
+        getResponse: () => res as any,
+        getHandler: () => () => {},
+        getClass: () => Object,
+        switchToHttp: () => ({
+          getRequest: () => req as any,
+          getResponse: () => res as any,
+        }),
+      };
+
+      for (const interceptor of this.globalInterceptors) {
+        await interceptor.intercept(context, {
+          handle: async () => null,
+        });
+        // If interceptor handled the response (e.g., served static file), stop here
+        if (res.writableEnded || res.headersSent) {
+          return;
+        }
+      }
+    }
 
     // Find matching route from cache first
     const routes = this.routeCache.get(method);
@@ -421,6 +446,11 @@ export class FynixApplication {
           route.handler.apply(route.controller, args)
         )
       : await route.handler.apply(route.controller, args);
+
+    // Check if response was already sent by an interceptor
+    if (res.writableEnded || res.headersSent) {
+      return;
+    }
 
     res.statusCode = 200;
     res.setHeader("Content-Type", FynixApplication.JSON_TYPE);
@@ -574,8 +604,11 @@ export class FynixApplication {
 
     let finalHandler = handler;
     for (const InterceptorClass of interceptors.slice().reverse()) {
+      // Check if it's already an instance or a class reference
       const interceptor: FynixInterceptor =
-        this.moduleContainer.resolve(InterceptorClass);
+        typeof InterceptorClass === "function"
+          ? this.moduleContainer.resolve(InterceptorClass)
+          : InterceptorClass;
       const currentHandler = finalHandler;
       finalHandler = async () => {
         return await interceptor.intercept(context, { handle: currentHandler });
@@ -600,6 +633,84 @@ export class FynixApplication {
   }
 
   /**
+   * Setup graceful shutdown handlers
+   */
+  private setupGracefulShutdown(): void {
+    const signals: NodeJS.Signals[] = ["SIGTERM", "SIGINT", "SIGUSR2"];
+
+    signals.forEach((signal) => {
+      process.on(signal, async () => {
+        if (this.isShuttingDown) return;
+
+        console.log(
+          `\n[FynixJS] Received ${signal}, starting graceful shutdown...`
+        );
+        this.isShuttingDown = true;
+
+        try {
+          await this.shutdown();
+          console.log("[FynixJS] Graceful shutdown completed");
+          process.exit(0);
+        } catch (error) {
+          console.error("[FynixJS] Error during shutdown:", error);
+          process.exit(1);
+        }
+      });
+    });
+
+    // Handle uncaught exceptions
+    process.on("uncaughtException", (error) => {
+      console.error("[FynixJS] Uncaught Exception:", error);
+      this.shutdown().then(() => process.exit(1));
+    });
+
+    // Handle unhandled promise rejections
+    process.on("unhandledRejection", (reason, promise) => {
+      console.error(
+        "[FynixJS] Unhandled Rejection at:",
+        promise,
+        "reason:",
+        reason
+      );
+    });
+  }
+
+  /**
+   * Register a shutdown hook
+   */
+  onShutdown(hook: () => Promise<void>): void {
+    this.shutdownHooks.push(hook);
+  }
+
+  /**
+   * Perform graceful shutdown
+   */
+  private async shutdown(): Promise<void> {
+    console.log("[FynixJS] Running shutdown hooks...");
+
+    // Execute all shutdown hooks
+    for (const hook of this.shutdownHooks) {
+      try {
+        await hook();
+      } catch (error) {
+        console.error("[FynixJS] Error in shutdown hook:", error);
+      }
+    }
+
+    // Stop accepting new connections
+    if (this.server) {
+      await this.close();
+    }
+
+    // Stop hot reload watcher
+    if (this.hotReloadManager) {
+      this.hotReloadManager = null;
+    }
+
+    console.log("[FynixJS] Server closed");
+  }
+
+  /**
    * Close the server
    */
   async close(): Promise<void> {
@@ -613,5 +724,13 @@ export class FynixApplication {
         resolve();
       }
     });
+  }
+
+  /**
+   * Enable graceful shutdown (already enabled by default)
+   */
+  enableShutdownHooks(): void {
+    // Already enabled in constructor
+    console.log("[FynixJS] Graceful shutdown hooks are enabled");
   }
 }

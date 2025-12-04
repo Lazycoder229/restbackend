@@ -101,6 +101,13 @@ export interface StaticFilesOptions {
    * @default false
    */
   dotfiles?: boolean;
+
+  /**
+   * Paths to exclude from static file serving (e.g., ['/api', '/graphql'])
+   * Useful when prefix is '/' to allow API routes to work
+   * @default []
+   */
+  exclude?: string[];
 }
 
 /**
@@ -129,6 +136,7 @@ export class StaticFilesInterceptor implements FynixInterceptor {
   private notFoundPage: string | null;
   private dotfiles: boolean;
   private absoluteRootDir: string;
+  private exclude: string[];
 
   constructor(options: StaticFilesOptions = {}) {
     this.rootDir = options.rootDir || "public";
@@ -142,6 +150,7 @@ export class StaticFilesInterceptor implements FynixInterceptor {
     this.etag = options.etag !== undefined ? options.etag : true;
     this.notFoundPage = options.notFoundPage || null;
     this.dotfiles = options.dotfiles !== undefined ? options.dotfiles : false;
+    this.exclude = options.exclude || [];
 
     // Normalize prefix
     if (!this.prefix.startsWith("/")) {
@@ -167,6 +176,13 @@ export class StaticFilesInterceptor implements FynixInterceptor {
     const request = context.getRequest();
     const response = context.getResponse();
     const url = request.url || "";
+
+    // Check if path should be excluded (e.g., /api routes)
+    for (const excludePath of this.exclude) {
+      if (url.startsWith(excludePath)) {
+        return await next.handle();
+      }
+    }
 
     // Check if request matches static files prefix
     if (!url.startsWith(this.prefix)) {
