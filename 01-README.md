@@ -1,4 +1,6 @@
-# FynixJS Framework
+<!-- 00-README.md: Priority 1 to learn -->
+
+00 - FynixJS Framework
 
 <p align="center">
   <strong>🚀 Lightweight TypeScript Framework with Built-in Everything</strong>
@@ -8,8 +10,6 @@
   Build modern APIs faster with decorators, dependency injection, and zero configuration.<br>
   Security, database, ORM, and hot reload included out of the box!
 </p>
-
----
 
 ## ✨ Why FynixJS?
 

@@ -4,7 +4,7 @@
  * FynixJS CLI Entry Point
  */
 
-const { createCli } = require("./dist/builtin/cli");
+const { createCli } = require("../dist/builtin/cli");
 
 async function main() {
   try {
@@ -22,7 +22,7 @@ async function main() {
     if (needsDb) {
       // Try to load database config
       try {
-        const { DatabaseService } = require("./dist/builtin/database.service");
+        const { DatabaseService } = require("../dist/builtin/database.service");
         const dbService = new DatabaseService({
           host: process.env.DB_HOST || "localhost",
           port: parseInt(process.env.DB_PORT || "3306"),

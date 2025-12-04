@@ -1,12 +1,16 @@
 {
   "name": "@fynixjs/fynix",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "description": "🚀 Lightweight TypeScript framework with built-in security, database, ORM, and zero-config deployment. Decorators + DI + Entity/Models + MySQL + JWT out of the box!",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "type": "commonjs",
+  "bin": {
+    "fynix": "bin/fynix.js"
+  },
   "files": [
     "dist",
+    "bin",
     "LICENSE",
     "README.md",
     "*.md",
