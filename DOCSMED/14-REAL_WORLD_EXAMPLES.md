@@ -69,6 +69,7 @@ bootstrap();
 ```
 
 **Test it:**
+
 ```bash
 curl http://localhost:3000/api/
 curl http://localhost:3000/api/health
@@ -84,7 +85,15 @@ curl http://localhost:3000/api/health
 
 ```typescript
 // todo.controller.ts
-import { Controller, Get, Post, Put, Delete, Param, Body } from "@fynixjs/fynix";
+import {
+  Controller,
+  Get,
+  Post,
+  Put,
+  Delete,
+  Param,
+  Body,
+} from "@fynixjs/fynix";
 
 interface Todo {
   id: number;
@@ -154,6 +163,7 @@ export class AppModule {}
 ```
 
 **Test it:**
+
 ```bash
 # Get all todos
 curl http://localhost:3000/todos
@@ -209,7 +219,7 @@ export class ContactService {
   async sendMessage(dto: ContactDto) {
     // Simulate email sending
     console.log("Sending email:", dto);
-    
+
     // In real app, use nodemailer or similar
     return {
       success: true,
@@ -244,6 +254,7 @@ export class ContactModule {}
 ```
 
 **Test it:**
+
 ```bash
 # Valid request
 curl -X POST http://localhost:3000/contact \
@@ -277,6 +288,7 @@ For developers who understand basics and want to add database, authentication, e
 **Time:** 45 minutes
 
 **Complete project structure:**
+
 ```
 blog-api/
 ├── src/

@@ -11,6 +11,7 @@ This guide covers common errors, debugging techniques, and solutions for FynixJS
 ### Issue: "experimentalDecorators" Error
 
 **Error:**
+
 ```
 Error: Cannot use decorators without enabling experimentalDecorators
 ```
@@ -18,6 +19,7 @@ Error: Cannot use decorators without enabling experimentalDecorators
 **Solution:**
 
 Update `tsconfig.json`:
+
 ```json
 {
   "compilerOptions": {
@@ -30,6 +32,7 @@ Update `tsconfig.json`:
 ### Issue: Module Not Found
 
 **Error:**
+
 ```
 Error: Cannot find module '@fynixjs/fynix'
 ```
@@ -37,17 +40,20 @@ Error: Cannot find module '@fynixjs/fynix'
 **Solutions:**
 
 1. **Check installation:**
+
 ```bash
 npm list @fynixjs/fynix
 ```
 
 2. **Reinstall:**
+
 ```bash
 npm uninstall @fynixjs/fynix
 npm install @fynixjs/fynix
 ```
 
 3. **Clear cache:**
+
 ```bash
 npm cache clean --force
 rm -rf node_modules package-lock.json
@@ -57,11 +63,13 @@ npm install
 ### Issue: TypeScript Version Mismatch
 
 **Error:**
+
 ```
 Error: TypeScript version X.X.X is not compatible
 ```
 
 **Solution:**
+
 ```bash
 npm install -D typescript@^5.0.0
 ```
@@ -77,6 +85,7 @@ npm install -D typescript@^5.0.0
 **Checklist:**
 
 1. **Controller registered in module?**
+
 ```typescript
 @Module({
   controllers: [UserController], // ✅ Must be here
@@ -85,6 +94,7 @@ export class AppModule {}
 ```
 
 2. **Correct path?**
+
 ```typescript
 @Controller("/api") // Base path
 export class ApiController {
@@ -94,6 +104,7 @@ export class ApiController {
 ```
 
 3. **Server running?**
+
 ```bash
 # Check if server started
 🚀 Server running on http://localhost:3000
@@ -104,12 +115,14 @@ export class ApiController {
 **Problem:** `@Param()` returns undefined
 
 **Wrong:**
+
 ```typescript
 @Get("/users/:userId")
 getUser(@Param("id") id: string) {} // ❌ Wrong parameter name
 ```
 
 **Correct:**
+
 ```typescript
 @Get("/users/:userId")
 getUser(@Param("userId") id: string) {} // ✅ Matches route
@@ -122,6 +135,7 @@ getUser(@Param("userId") id: string) {} // ✅ Matches route
 **Solutions:**
 
 1. **Check Content-Type header:**
+
 ```bash
 curl -X POST http://localhost:3000/api/users \
   -H "Content-Type: application/json" \
@@ -129,6 +143,7 @@ curl -X POST http://localhost:3000/api/users \
 ```
 
 2. **Use ValidationPipe:**
+
 ```typescript
 @Post()
 @UsePipes(ValidationPipe)
@@ -144,6 +159,7 @@ create(@Body() dto: CreateUserDto) {
 ### Issue: "No provider for X"
 
 **Error:**
+
 ```
 Error: No provider for UserService
 ```
@@ -151,6 +167,7 @@ Error: No provider for UserService
 **Solution:**
 
 Register in module:
+
 ```typescript
 @Module({
   providers: [UserService], // ✅ Add here
@@ -162,11 +179,13 @@ export class UserModule {}
 ### Issue: Circular Dependency
 
 **Error:**
+
 ```
 Error: Circular dependency detected
 ```
 
 **Problem:**
+
 ```typescript
 // user.service.ts
 @Injectable()
@@ -184,6 +203,7 @@ class PostService {
 **Solution:**
 
 Use forwardRef or restructure:
+
 ```typescript
 // Restructure: Extract shared logic to a third service
 @Injectable()
@@ -205,16 +225,19 @@ class PostService {
 ### Issue: Injectable Decorator Missing
 
 **Error:**
+
 ```
 Error: Cannot inject UserService
 ```
 
 **Wrong:**
+
 ```typescript
 export class UserService {} // ❌ Missing decorator
 ```
 
 **Correct:**
+
 ```typescript
 @Injectable()
 export class UserService {} // ✅ Has decorator
@@ -227,6 +250,7 @@ export class UserService {} // ✅ Has decorator
 ### Issue: Database Connection Failed
 
 **Error:**
+
 ```
 Error: connect ECONNREFUSED 127.0.0.1:3306
 ```
@@ -234,6 +258,7 @@ Error: connect ECONNREFUSED 127.0.0.1:3306
 **Checklist:**
 
 1. **MySQL running?**
+
 ```bash
 # Windows
 net start MySQL80
@@ -243,17 +268,19 @@ sudo systemctl start mysql
 ```
 
 2. **Correct credentials?**
+
 ```typescript
 await db.connect({
   host: "localhost",
   port: 3306,
   user: "root",
   password: "your_password", // ✅ Check this
-  database: "your_database",  // ✅ Check this
+  database: "your_database", // ✅ Check this
 });
 ```
 
 3. **Database exists?**
+
 ```sql
 CREATE DATABASE your_database;
 ```
@@ -261,6 +288,7 @@ CREATE DATABASE your_database;
 ### Issue: Table Doesn't Exist
 
 **Error:**
+
 ```
 Error: Table 'mydb.users' doesn't exist
 ```
@@ -268,11 +296,13 @@ Error: Table 'mydb.users' doesn't exist
 **Solutions:**
 
 1. **Enable auto-sync (development only):**
+
 ```typescript
 await db.synchronize(); // Creates tables automatically
 ```
 
 2. **Create table manually:**
+
 ```sql
 CREATE TABLE users (
   id INT PRIMARY KEY AUTO_INCREMENT,
@@ -284,6 +314,7 @@ CREATE TABLE users (
 ### Issue: Column Not Found
 
 **Error:**
+
 ```
 Error: Unknown column 'age' in 'field list'
 ```
@@ -291,6 +322,7 @@ Error: Unknown column 'age' in 'field list'
 **Solution:**
 
 Update entity and re-sync:
+
 ```typescript
 @Entity("users")
 export class User extends BaseEntity {
@@ -305,6 +337,7 @@ await db.synchronize();
 ### Issue: Foreign Key Constraint Failed
 
 **Error:**
+
 ```
 Error: Cannot add or update a child row: a foreign key constraint fails
 ```
@@ -312,6 +345,7 @@ Error: Cannot add or update a child row: a foreign key constraint fails
 **Solution:**
 
 Ensure parent record exists:
+
 ```typescript
 // Wrong
 const post = new Post();
@@ -334,6 +368,7 @@ await post.save();
 ### Issue: JWT Token Invalid
 
 **Error:**
+
 ```
 Error: JsonWebTokenError: invalid token
 ```
@@ -341,18 +376,21 @@ Error: JsonWebTokenError: invalid token
 **Solutions:**
 
 1. **Check token format:**
+
 ```typescript
 // Correct format
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
 ```
 
 2. **Verify secret key:**
+
 ```typescript
 const token = jwt.sign(payload, "same-secret-key");
 const decoded = jwt.verify(token, "same-secret-key"); // ✅ Must match
 ```
 
 3. **Check expiration:**
+
 ```typescript
 const token = jwt.sign(payload, secret, { expiresIn: "1h" });
 // Token expires after 1 hour
@@ -365,6 +403,7 @@ const token = jwt.sign(payload, secret, { expiresIn: "1h" });
 **Solution:**
 
 Hash password before saving:
+
 ```typescript
 import * as bcrypt from "bcrypt";
 
@@ -387,6 +426,7 @@ const isValid = await bcrypt.compare(plainPassword, user.password);
 **Solution:**
 
 Use ValidationPipe:
+
 ```typescript
 // Method-level
 @Post()
@@ -404,18 +444,20 @@ app.useGlobalPipes(new ValidationPipe());
 **Check:**
 
 1. **DTO has decorators:**
+
 ```typescript
 export class CreateUserDto {
-  @IsString()      // ✅ Has decorator
-  @IsNotEmpty()    // ✅ Has decorator
+  @IsString() // ✅ Has decorator
+  @IsNotEmpty() // ✅ Has decorator
   name: string;
 }
 ```
 
 2. **Request body matches DTO:**
+
 ```json
 {
-  "name": "John"  // ✅ Matches DTO property
+  "name": "John" // ✅ Matches DTO property
 }
 ```
 
@@ -428,6 +470,7 @@ export class CreateUserDto {
 **Solutions:**
 
 1. **Add database indexes:**
+
 ```typescript
 @Entity("users")
 export class User {
@@ -438,6 +481,7 @@ export class User {
 ```
 
 2. **Use select to limit columns:**
+
 ```typescript
 // Slow
 const users = await User.find(); // Gets all columns
@@ -449,6 +493,7 @@ const users = await User.createQueryBuilder()
 ```
 
 3. **Add caching:**
+
 ```typescript
 @UseInterceptors(CacheInterceptor)
 @Get()
@@ -456,6 +501,7 @@ expensiveOperation() {}
 ```
 
 4. **Use pagination:**
+
 ```typescript
 @Get()
 async findAll(@Query("page") page: number, @Query("limit") limit: number) {
@@ -470,6 +516,7 @@ async findAll(@Query("page") page: number, @Query("limit") limit: number) {
 **Solutions:**
 
 1. **Close database connections:**
+
 ```typescript
 process.on("SIGINT", async () => {
   await db.close();
@@ -478,6 +525,7 @@ process.on("SIGINT", async () => {
 ```
 
 2. **Don't store large objects in memory:**
+
 ```typescript
 // Bad
 const cache = {}; // ❌ Grows forever
@@ -500,11 +548,13 @@ if (cache.size > 1000) {
 **Solution:**
 
 1. **Use ts-node-dev:**
+
 ```bash
 npm install -D ts-node-dev
 ```
 
 2. **Update package.json:**
+
 ```json
 {
   "scripts": {
@@ -514,6 +564,7 @@ npm install -D ts-node-dev
 ```
 
 3. **Check file watching:**
+
 ```bash
 # Make sure no errors in console
 npm run dev
@@ -531,7 +582,7 @@ async function bootstrap() {
   const app = await FynixFactory.create(AppModule, {
     logger: true, // ✅ Enable logging
   });
-  
+
   await app.init();
   await app.listen(3000);
 }
@@ -547,7 +598,7 @@ export class LoggingInterceptor implements FynixInterceptor {
     console.log(`[${req.method}] ${req.url}`);
     console.log("Body:", req.body);
     console.log("Query:", req.query);
-    
+
     const result = await next.handle();
     console.log("Response:", result);
     return result;
@@ -575,6 +626,7 @@ await db.connect({
 ### VS Code Debugging
 
 **`.vscode/launch.json`:**
+
 ```json
 {
   "version": "0.2.0",
@@ -600,6 +652,7 @@ await db.connect({
 ### Issue: Port Already in Use
 
 **Error:**
+
 ```
 Error: listen EADDRINUSE: address already in use :::3000
 ```
@@ -607,17 +660,20 @@ Error: listen EADDRINUSE: address already in use :::3000
 **Solutions:**
 
 1. **Use different port:**
+
 ```typescript
 await app.listen(4000); // Different port
 ```
 
 2. **Kill process on port (Windows):**
+
 ```bash
 netstat -ano | findstr :3000
 taskkill /PID <PID> /F
 ```
 
 3. **Kill process on port (Linux/Mac):**
+
 ```bash
 lsof -i :3000
 kill -9 <PID>
@@ -626,6 +682,7 @@ kill -9 <PID>
 ### Issue: CORS Errors
 
 **Error:**
+
 ```
 Access to XMLHttpRequest has been blocked by CORS policy
 ```
@@ -633,6 +690,7 @@ Access to XMLHttpRequest has been blocked by CORS policy
 **Solution:**
 
 Enable CORS:
+
 ```typescript
 @UseInterceptors(CorsInterceptor)
 @Controller("/api")
@@ -645,7 +703,10 @@ export class CustomCorsInterceptor implements FynixInterceptor {
     const response = context.switchToHttp().getResponse();
     response.setHeader("Access-Control-Allow-Origin", "*");
     response.setHeader("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE");
-    response.setHeader("Access-Control-Allow-Headers", "Content-Type,Authorization");
+    response.setHeader(
+      "Access-Control-Allow-Headers",
+      "Content-Type,Authorization"
+    );
     return await next.handle();
   }
 }
@@ -662,6 +723,7 @@ export class CustomCorsInterceptor implements FynixInterceptor {
 **Solution:**
 
 1. **Create .env file:**
+
 ```env
 DB_HOST=localhost
 DB_PORT=3306
@@ -669,6 +731,7 @@ JWT_SECRET=your-secret-key
 ```
 
 2. **Load environment variables:**
+
 ```bash
 npm install dotenv
 ```
@@ -687,6 +750,7 @@ async function bootstrap() {
 ### Issue: Build Errors
 
 **Error:**
+
 ```
 Error: Cannot find module after build
 ```
@@ -694,6 +758,7 @@ Error: Cannot find module after build
 **Solution:**
 
 1. **Check tsconfig.json:**
+
 ```json
 {
   "compilerOptions": {
@@ -705,6 +770,7 @@ Error: Cannot find module after build
 ```
 
 2. **Build and run:**
+
 ```bash
 npm run build
 node dist/main.js

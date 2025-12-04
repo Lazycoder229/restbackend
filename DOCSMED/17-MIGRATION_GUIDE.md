@@ -8,19 +8,19 @@ Complete guide for migrating from Express.js, NestJS, and Fastify to FynixJS.
 
 ## 📊 Framework Comparison
 
-| Feature                | Express.js      | NestJS          | Fastify         | **FynixJS**       |
-| ---------------------- | --------------- | --------------- | --------------- | ----------------- |
-| TypeScript Support     | ⚠️ Manual       | ✅ Built-in     | ✅ Built-in     | ✅ **Built-in**   |
-| Dependency Injection   | ❌ No           | ✅ Yes          | ⚠️ Plugin       | ✅ **Yes**        |
-| Decorators             | ❌ No           | ✅ Yes          | ❌ No           | ✅ **Yes**        |
-| ORM Integration        | ⚠️ Manual       | ⚠️ TypeORM      | ⚠️ Manual       | ✅ **Built-in**   |
-| Authentication         | ⚠️ Passport.js  | ⚠️ Passport.js  | ⚠️ Manual       | ✅ **Built-in**   |
-| Validation             | ⚠️ express-validator | ✅ class-validator | ⚠️ ajv    | ✅ **Built-in**   |
-| Hot Reload             | ⚠️ nodemon      | ⚠️ Manual       | ⚠️ Manual       | ✅ **Built-in**   |
-| Configuration          | ⚠️ Manual       | ⚠️ Manual       | ✅ Good         | ✅ **Zero-config**|
-| Learning Curve         | 🟢 Easy         | 🔴 Steep        | 🟡 Medium       | 🟢 **Easy**       |
-| Performance            | 🟡 Good         | 🟡 Good         | 🟢 Excellent    | 🟢 **Excellent**  |
-| Bundle Size            | 🟢 Small        | 🔴 Large        | 🟢 Small        | 🟡 **Medium**     |
+| Feature              | Express.js           | NestJS             | Fastify      | **FynixJS**        |
+| -------------------- | -------------------- | ------------------ | ------------ | ------------------ |
+| TypeScript Support   | ⚠️ Manual            | ✅ Built-in        | ✅ Built-in  | ✅ **Built-in**    |
+| Dependency Injection | ❌ No                | ✅ Yes             | ⚠️ Plugin    | ✅ **Yes**         |
+| Decorators           | ❌ No                | ✅ Yes             | ❌ No        | ✅ **Yes**         |
+| ORM Integration      | ⚠️ Manual            | ⚠️ TypeORM         | ⚠️ Manual    | ✅ **Built-in**    |
+| Authentication       | ⚠️ Passport.js       | ⚠️ Passport.js     | ⚠️ Manual    | ✅ **Built-in**    |
+| Validation           | ⚠️ express-validator | ✅ class-validator | ⚠️ ajv       | ✅ **Built-in**    |
+| Hot Reload           | ⚠️ nodemon           | ⚠️ Manual          | ⚠️ Manual    | ✅ **Built-in**    |
+| Configuration        | ⚠️ Manual            | ⚠️ Manual          | ✅ Good      | ✅ **Zero-config** |
+| Learning Curve       | 🟢 Easy              | 🔴 Steep           | 🟡 Medium    | 🟢 **Easy**        |
+| Performance          | 🟡 Good              | 🟡 Good            | 🟢 Excellent | 🟢 **Excellent**   |
+| Bundle Size          | 🟢 Small             | 🔴 Large           | 🟢 Small     | 🟡 **Medium**      |
 
 ---
 
@@ -29,6 +29,7 @@ Complete guide for migrating from Express.js, NestJS, and Fastify to FynixJS.
 ### Basic Route Comparison
 
 #### Express.js
+
 ```javascript
 const express = require("express");
 const app = express();
@@ -51,8 +52,17 @@ app.listen(3000);
 ```
 
 #### FynixJS
+
 ```typescript
-import { FynixFactory, Module, Controller, Get, Post, Param, Body } from "@fynixjs/fynix";
+import {
+  FynixFactory,
+  Module,
+  Controller,
+  Get,
+  Post,
+  Param,
+  Body,
+} from "@fynixjs/fynix";
 
 @Controller("/users")
 export class UserController {
@@ -89,6 +99,7 @@ bootstrap();
 ### Middleware → Interceptors
 
 #### Express.js
+
 ```javascript
 // Middleware
 app.use((req, res, next) => {
@@ -103,6 +114,7 @@ app.use((err, req, res, next) => {
 ```
 
 #### FynixJS
+
 ```typescript
 @Injectable()
 export class LoggingInterceptor implements FynixInterceptor {
@@ -120,6 +132,7 @@ app.useGlobalInterceptors(new LoggingInterceptor());
 ### Authentication
 
 #### Express.js
+
 ```javascript
 const jwt = require("jsonwebtoken");
 
@@ -143,13 +156,14 @@ app.get("/protected", authMiddleware, (req, res) => {
 ```
 
 #### FynixJS
+
 ```typescript
 @Injectable()
 export class JwtAuthGuard implements CanActivate {
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
     const token = request.headers.authorization?.split(" ")[1];
-    
+
     if (!token) return false;
 
     try {
@@ -180,17 +194,18 @@ FynixJS is inspired by NestJS, so migration is straightforward!
 
 ### Key Differences
 
-| Aspect              | NestJS                     | FynixJS                    |
-| ------------------- | -------------------------- | -------------------------- |
-| ORM                 | TypeORM (separate)         | Built-in Active Record     |
-| Configuration       | ConfigModule required      | Zero-config               |
-| CLI                 | Full CLI tooling           | Simple CLI                |
-| Modules             | More complex               | Simplified                |
-| Learning Resources  | Extensive                  | Growing                   |
+| Aspect             | NestJS                | FynixJS                |
+| ------------------ | --------------------- | ---------------------- |
+| ORM                | TypeORM (separate)    | Built-in Active Record |
+| Configuration      | ConfigModule required | Zero-config            |
+| CLI                | Full CLI tooling      | Simple CLI             |
+| Modules            | More complex          | Simplified             |
+| Learning Resources | Extensive             | Growing                |
 
 ### Module Structure (Almost Identical!)
 
 #### NestJS
+
 ```typescript
 import { Module } from "@nestjs/common";
 import { UserController } from "./user.controller";
@@ -205,6 +220,7 @@ export class UserModule {}
 ```
 
 #### FynixJS
+
 ```typescript
 import { Module } from "@fynixjs/fynix";
 import { UserController } from "./user.controller";
@@ -223,6 +239,7 @@ export class UserModule {}
 ### Controllers (Nearly Identical)
 
 #### NestJS
+
 ```typescript
 import { Controller, Get, Post, Body, Param } from "@nestjs/common";
 
@@ -246,6 +263,7 @@ export class UserController {
 ```
 
 #### FynixJS
+
 ```typescript
 import { Controller, Get, Post, Body, Param } from "@fynixjs/fynix";
 
@@ -269,12 +287,14 @@ export class UserController {
 ```
 
 **Changes:**
+
 - Add `/` prefix to `@Controller("/users")`
 - Use `"/:id"` instead of `":id"` in routes
 
 ### Services (Identical!)
 
 #### NestJS & FynixJS (Same!)
+
 ```typescript
 import { Injectable } from "@fynixjs/fynix"; // or @nestjs/common
 
@@ -293,6 +313,7 @@ export class UserService {
 ### Database: TypeORM → FynixJS ORM
 
 #### NestJS (TypeORM)
+
 ```typescript
 import { Entity, Column, PrimaryGeneratedColumn } from "typeorm";
 
@@ -313,8 +334,14 @@ const users = await this.userRepository.find();
 ```
 
 #### FynixJS (Built-in ORM)
+
 ```typescript
-import { Entity, Column, PrimaryGeneratedColumn, BaseEntity } from "@fynixjs/fynix";
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  BaseEntity,
+} from "@fynixjs/fynix";
 
 @Entity("users")
 export class User extends BaseEntity {
@@ -333,6 +360,7 @@ const users = await User.find();
 ```
 
 **Changes:**
+
 - Extend `BaseEntity`
 - Use Active Record pattern (simpler!)
 - Specify table name in `@Entity("users")`
@@ -353,6 +381,7 @@ const users = await User.find();
 ### Basic Route Comparison
 
 #### Fastify
+
 ```javascript
 const fastify = require("fastify")();
 
@@ -374,8 +403,17 @@ fastify.listen({ port: 3000 });
 ```
 
 #### FynixJS
+
 ```typescript
-import { FynixFactory, Module, Controller, Get, Post, Param, Body } from "@fynixjs/fynix";
+import {
+  FynixFactory,
+  Module,
+  Controller,
+  Get,
+  Post,
+  Param,
+  Body,
+} from "@fynixjs/fynix";
 
 @Controller("/users")
 export class UserController {
@@ -412,6 +450,7 @@ bootstrap();
 ### Hooks → Interceptors
 
 #### Fastify
+
 ```javascript
 fastify.addHook("onRequest", async (request, reply) => {
   console.log(`[${request.method}] ${request.url}`);
@@ -426,6 +465,7 @@ fastify.addHook("preHandler", async (request, reply) => {
 ```
 
 #### FynixJS
+
 ```typescript
 @Injectable()
 export class LoggingInterceptor implements FynixInterceptor {
@@ -454,6 +494,7 @@ getProtected() {}
 ### Validation
 
 #### Fastify
+
 ```javascript
 const schema = {
   body: {
@@ -472,6 +513,7 @@ fastify.post("/users", { schema }, async (request, reply) => {
 ```
 
 #### FynixJS
+
 ```typescript
 import { IsString, IsEmail, IsNotEmpty, MinLength } from "@fynixjs/fynix";
 
@@ -500,11 +542,13 @@ createUser(@Body() dto: CreateUserDto) {
 ### Step-by-Step Migration
 
 #### 1. **Start Small**
+
 - Migrate one module/route at a time
 - Test thoroughly before moving on
 - Keep old and new code separate initially
 
 #### 2. **Project Structure**
+
 ```
 my-app/
 ├── src/
@@ -519,12 +563,14 @@ my-app/
 ```
 
 #### 3. **Install Dependencies**
+
 ```bash
 npm install @fynixjs/fynix
 npm install -D typescript ts-node @types/node
 ```
 
 #### 4. **Configure TypeScript**
+
 ```json
 {
   "compilerOptions": {
@@ -541,6 +587,7 @@ npm install -D typescript ts-node @types/node
 #### 5. **Update Imports**
 
 **Find and Replace:**
+
 ```typescript
 // Express
 import express from "express";
@@ -561,6 +608,7 @@ import { FynixFactory } from "@fynixjs/fynix";
 #### 6. **Convert Routes**
 
 Use this pattern for each route:
+
 ```typescript
 // Old (any framework)
 app.get("/users", handler);
@@ -574,6 +622,7 @@ export class UserController {
 ```
 
 #### 7. **Test Everything**
+
 - Unit tests
 - Integration tests
 - Manual testing
@@ -584,7 +633,9 @@ export class UserController {
 ## 💡 Pro Tips
 
 ### 1. **Gradual Migration**
+
 Run both servers side-by-side:
+
 ```typescript
 // Old server on port 3000
 // New FynixJS server on port 4000
@@ -592,7 +643,9 @@ Run both servers side-by-side:
 ```
 
 ### 2. **Code Reuse**
+
 Most business logic can be reused:
+
 ```typescript
 // ✅ Keep your existing services
 // ✅ Keep your database models (with minor changes)
@@ -602,7 +655,9 @@ Most business logic can be reused:
 ```
 
 ### 3. **Performance**
+
 FynixJS is fast! But benchmark your app:
+
 ```bash
 # Before
 ab -n 1000 -c 10 http://localhost:3000/api
@@ -618,21 +673,25 @@ ab -n 1000 -c 10 http://localhost:4000/api
 ### Why Migrate to FynixJS?
 
 ✅ **Better Developer Experience**
+
 - TypeScript-first design
 - Decorator-based routing
 - Built-in dependency injection
 
 ✅ **Less Configuration**
+
 - Zero-config setup
 - Built-in ORM
 - Built-in authentication
 
 ✅ **Easier Maintenance**
+
 - Cleaner code structure
 - Better testability
 - Standardized patterns
 
 ✅ **Modern Features**
+
 - Hot reload
 - GraphQL support
 - WebSocket support

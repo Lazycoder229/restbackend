@@ -21,6 +21,7 @@ export class UserModule {}
 ```
 
 **Options:**
+
 - `controllers`: Array of controller classes
 - `providers`: Array of injectable services
 - `imports`: Array of modules to import
@@ -50,6 +51,7 @@ export class UserController {}
 ```
 
 **Example:**
+
 ```typescript
 @Controller("/users")
 export class UserController {
@@ -78,6 +80,7 @@ export class UserController {
 ```
 
 **Examples:**
+
 ```typescript
 @Get("/:id")
 findOne(@Param("id") id: string) {}
@@ -273,6 +276,7 @@ export class CreateUserDto {
 ```
 
 **Example:**
+
 ```typescript
 @Entity("users")
 export class User extends BaseEntity {
@@ -597,7 +601,7 @@ export class AuthController {
 ## 📊 HTTP Status Codes
 
 ```typescript
-import { 
+import {
   HttpStatus,
   NotFoundException,
   BadRequestException,

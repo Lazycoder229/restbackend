@@ -25,12 +25,14 @@
 ### What Makes FynixJS Different?
 
 **For Beginners:**
+
 - ✅ No configuration needed - just start coding
 - ✅ Clear error messages that help you learn
 - ✅ Decorator-based syntax is easy to read and understand
 - ✅ Built-in features mean less to learn
 
 **For Experienced Developers:**
+
 - ✅ TypeScript-first with full type safety
 - ✅ Familiar patterns from NestJS, but simpler
 - ✅ Production-ready out of the box
@@ -43,7 +45,14 @@
 See FynixJS in action with this simple example:
 
 ```typescript
-import { FynixFactory, Module, Controller, Get, Post, Body } from "@fynixjs/fynix";
+import {
+  FynixFactory,
+  Module,
+  Controller,
+  Get,
+  Post,
+  Body,
+} from "@fynixjs/fynix";
 
 // 1. Create a controller
 @Controller("/api")
@@ -85,16 +94,19 @@ bootstrap();
 Before diving into FynixJS, you should have:
 
 ### Required Knowledge
+
 - ✅ **JavaScript fundamentals** - Variables, functions, async/await
 - ✅ **Node.js basics** - npm, modules, package.json
 - ⚠️ **TypeScript basics** - Types, interfaces, decorators (recommended)
 
 ### Nice to Have
+
 - 🟡 REST API concepts
 - 🟡 SQL/Database basics
 - 🟡 Previous framework experience (Express, NestJS, etc.)
 
 ### System Requirements
+
 - **Node.js**: 16.x or higher
 - **npm** or **yarn**: Package manager
 - **MySQL**: 5.7+ (optional, for database features)
@@ -103,6 +115,7 @@ Before diving into FynixJS, you should have:
 ### 5-Minute Learning Path
 
 **Never built an API before?**
+
 ```
 1. Read this overview (10 min)
 2. Follow Getting Started guide (20 min)
@@ -110,6 +123,7 @@ Before diving into FynixJS, you should have:
 ```
 
 **Coming from Express/NestJS?**
+
 ```
 1. Read Quick Taste (above) (2 min)
 2. Check Migration Guide (10 min)

@@ -15,11 +15,13 @@ npm install @fynixjs/fynix
 ```
 
 Access CLI commands via `npx`:
+
 ```bash
 npx fynix --help
 ```
 
 Or add to `package.json` scripts:
+
 ```json
 {
   "scripts": {
@@ -29,6 +31,7 @@ Or add to `package.json` scripts:
 ```
 
 Then run:
+
 ```bash
 npm run fynix -- --help
 ```
@@ -40,6 +43,7 @@ npm run fynix -- --help
 ### General Commands
 
 #### `fynix --help`
+
 Display help information
 
 ```bash
@@ -47,6 +51,7 @@ npx fynix --help
 ```
 
 #### `fynix --version`
+
 Show FynixJS version
 
 ```bash
@@ -60,6 +65,7 @@ npx fynix --version
 ### Migration Commands
 
 #### `fynix migrate:run`
+
 Run pending migrations
 
 ```bash
@@ -67,6 +73,7 @@ npx fynix migrate:run
 ```
 
 **Environment Variables:**
+
 ```bash
 DB_HOST=localhost
 DB_PORT=3306
@@ -76,11 +83,13 @@ DB_NAME=myapp
 ```
 
 **Example:**
+
 ```bash
 DB_HOST=localhost DB_USER=root DB_PASSWORD=secret npx fynix migrate:run
 ```
 
 #### `fynix migrate:rollback`
+
 Rollback last migration batch
 
 ```bash
@@ -88,12 +97,14 @@ npx fynix migrate:rollback
 ```
 
 **Options:**
+
 ```bash
 # Rollback specific number of batches
 npx fynix migrate:rollback --steps=2
 ```
 
 #### `fynix migrate:reset`
+
 Rollback all migrations
 
 ```bash
@@ -103,6 +114,7 @@ npx fynix migrate:reset
 ⚠️ **Warning:** This will drop all tables!
 
 #### `fynix migrate:status`
+
 Show migration status
 
 ```bash
@@ -110,6 +122,7 @@ npx fynix migrate:status
 ```
 
 **Output:**
+
 ```
 Migration Status:
 ✅ 2025_01_01_000000_create_users_table.js - Ran
@@ -120,6 +133,7 @@ Migration Status:
 ### Seeder Commands
 
 #### `fynix seed:run`
+
 Run database seeders
 
 ```bash
@@ -127,6 +141,7 @@ npx fynix seed:run
 ```
 
 **Options:**
+
 ```bash
 # Run specific seeder
 npx fynix seed:run --class=UserSeeder
@@ -137,6 +152,7 @@ npx fynix seed:run --class=UserSeeder
 ## 🏗️ Project Commands
 
 ### `fynix new <project-name>`
+
 Create a new FynixJS project
 
 ```bash
@@ -144,6 +160,7 @@ npx fynix new my-app
 ```
 
 **What it creates:**
+
 ```
 my-app/
 ├── src/
@@ -156,6 +173,7 @@ my-app/
 ```
 
 **Options:**
+
 ```bash
 # Skip npm install
 npx fynix new my-app --skip-install
@@ -165,16 +183,27 @@ npx fynix new my-app --package-manager=yarn
 ```
 
 ### `fynix generate` (or `g`)
+
 Generate code scaffolding
 
 #### Generate Controller
+
 ```bash
 npx fynix g controller User
 ```
 
 **Creates:** `src/user/user.controller.ts`
+
 ```typescript
-import { Controller, Get, Post, Put, Delete, Param, Body } from "@fynixjs/fynix";
+import {
+  Controller,
+  Get,
+  Post,
+  Put,
+  Delete,
+  Param,
+  Body,
+} from "@fynixjs/fynix";
 
 @Controller("/users")
 export class UserController {
@@ -206,11 +235,13 @@ export class UserController {
 ```
 
 #### Generate Service
+
 ```bash
 npx fynix g service User
 ```
 
 **Creates:** `src/user/user.service.ts`
+
 ```typescript
 import { Injectable } from "@fynixjs/fynix";
 
@@ -241,11 +272,13 @@ export class UserService {
 ```
 
 #### Generate Module
+
 ```bash
 npx fynix g module User
 ```
 
 **Creates:** `src/user/user.module.ts`
+
 ```typescript
 import { Module } from "@fynixjs/fynix";
 import { UserController } from "./user.controller";
@@ -260,13 +293,20 @@ export class UserModule {}
 ```
 
 #### Generate Entity
+
 ```bash
 npx fynix g entity User
 ```
 
 **Creates:** `src/user/entities/user.entity.ts`
+
 ```typescript
-import { Entity, Column, PrimaryGeneratedColumn, BaseEntity } from "@fynixjs/fynix";
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  BaseEntity,
+} from "@fynixjs/fynix";
 
 @Entity("users")
 export class User extends BaseEntity {
@@ -286,11 +326,13 @@ export class User extends BaseEntity {
 ```
 
 #### Generate Guard
+
 ```bash
 npx fynix g guard Auth
 ```
 
 **Creates:** `src/guards/auth.guard.ts`
+
 ```typescript
 import { Injectable, CanActivate, ExecutionContext } from "@fynixjs/fynix";
 
@@ -305,20 +347,27 @@ export class AuthGuard implements CanActivate {
 ```
 
 #### Generate Interceptor
+
 ```bash
 npx fynix g interceptor Logging
 ```
 
 **Creates:** `src/interceptors/logging.interceptor.ts`
+
 ```typescript
-import { Injectable, FynixInterceptor, ExecutionContext, CallHandler } from "@fynixjs/fynix";
+import {
+  Injectable,
+  FynixInterceptor,
+  ExecutionContext,
+  CallHandler,
+} from "@fynixjs/fynix";
 
 @Injectable()
 export class LoggingInterceptor implements FynixInterceptor {
   async intercept(context: ExecutionContext, next: CallHandler): Promise<any> {
     const request = context.switchToHttp().getRequest();
     console.log(`[${request.method}] ${request.url}`);
-    
+
     const result = await next.handle();
     return result;
   }
@@ -326,16 +375,19 @@ export class LoggingInterceptor implements FynixInterceptor {
 ```
 
 #### Generate Pipe
+
 ```bash
 npx fynix g pipe Validation
 ```
 
 #### Generate Complete Resource
+
 ```bash
 npx fynix g resource User
 ```
 
 **Creates complete CRUD setup:**
+
 ```
 src/user/
 ├── user.module.ts
@@ -353,6 +405,7 @@ src/user/
 ## ⚙️ Configuration Commands
 
 ### `fynix config:show`
+
 Display current configuration
 
 ```bash
@@ -360,6 +413,7 @@ npx fynix config:show
 ```
 
 **Output:**
+
 ```
 FynixJS Configuration:
 - Database: mysql://localhost:3306/myapp
@@ -368,6 +422,7 @@ FynixJS Configuration:
 ```
 
 ### `fynix config:validate`
+
 Validate configuration files
 
 ```bash
@@ -379,6 +434,7 @@ npx fynix config:validate
 ## 🧪 Development Commands
 
 ### `fynix dev`
+
 Start development server with hot reload
 
 ```bash
@@ -386,6 +442,7 @@ npx fynix dev
 ```
 
 **Options:**
+
 ```bash
 # Specific port
 npx fynix dev --port=4000
@@ -395,6 +452,7 @@ npx fynix dev --watch="src/**/*.ts"
 ```
 
 ### `fynix build`
+
 Build project for production
 
 ```bash
@@ -404,6 +462,7 @@ npx fynix build
 **Output:** Compiled files in `dist/` directory
 
 **Options:**
+
 ```bash
 # Custom output directory
 npx fynix build --outDir=build
@@ -413,6 +472,7 @@ npx fynix build --watch
 ```
 
 ### `fynix start`
+
 Start production server
 
 ```bash
@@ -426,6 +486,7 @@ Runs the built application from `dist/` folder.
 ## 🔍 Utility Commands
 
 ### `fynix info`
+
 Display project and system information
 
 ```bash
@@ -433,6 +494,7 @@ npx fynix info
 ```
 
 **Output:**
+
 ```
 FynixJS Project Information:
 - FynixJS Version: 1.0.0
@@ -443,6 +505,7 @@ FynixJS Project Information:
 ```
 
 ### `fynix lint`
+
 Run linting checks
 
 ```bash
@@ -450,6 +513,7 @@ npx fynix lint
 ```
 
 ### `fynix test`
+
 Run tests
 
 ```bash
@@ -457,6 +521,7 @@ npx fynix test
 ```
 
 **Options:**
+
 ```bash
 # Run specific test
 npx fynix test --file=user.spec.ts
@@ -561,6 +626,7 @@ LOG_LEVEL=debug        # Logging level
 ### Using .env File
 
 Create `.env` file in project root:
+
 ```env
 DB_HOST=localhost
 DB_PORT=3306
@@ -571,6 +637,7 @@ PORT=3000
 ```
 
 Then run commands:
+
 ```bash
 npx fynix migrate:run
 # Automatically loads from .env
@@ -583,6 +650,7 @@ npx fynix migrate:run
 ### 1. **Add to npm scripts**
 
 **package.json:**
+
 ```json
 {
   "scripts": {
@@ -599,6 +667,7 @@ npx fynix migrate:run
 ```
 
 **Usage:**
+
 ```bash
 npm run dev
 npm run migrate
@@ -608,11 +677,13 @@ npm run g:resource User
 ### 2. **Create aliases**
 
 **bash/zsh:**
+
 ```bash
 alias fyx="npx fynix"
 ```
 
 **Usage:**
+
 ```bash
 fyx g controller User
 fyx dev
@@ -638,11 +709,13 @@ source .env.production && npx fynix start
 ### Command Not Found
 
 **Error:**
+
 ```
 'fynix' is not recognized as an internal or external command
 ```
 
 **Solution:**
+
 ```bash
 # Use npx
 npx fynix --help
@@ -655,11 +728,13 @@ fynix --help
 ### Database Connection Failed
 
 **Error:**
+
 ```
 Database connection required. Please set environment variables.
 ```
 
 **Solution:**
+
 ```bash
 # Set environment variables
 export DB_HOST=localhost
@@ -675,11 +750,13 @@ echo "DB_USER=root" >> .env
 ### Permission Denied (Unix/Linux)
 
 **Error:**
+
 ```
 EACCES: permission denied
 ```
 
 **Solution:**
+
 ```bash
 chmod +x node_modules/.bin/fynix
 npx fynix --help

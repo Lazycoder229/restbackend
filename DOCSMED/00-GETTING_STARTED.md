@@ -440,19 +440,19 @@ taskkill /PID <PID> /F
 
 ## 📖 Documentation Map
 
-| Topic                    | File                                                             | For              |
-| ------------------------ | ---------------------------------------------------------------- | ---------------- |
-| Getting Started          | [00-GETTING_STARTED.md](./00-GETTING_STARTED.md)                 | Beginners        |
-| Quick Reference          | [15-QUICK_REFERENCE.md](./15-QUICK_REFERENCE.md)                 | All Developers   |
-| Framework Overview       | [01-FRAMEWORK_OVERVIEW.md](./01-FRAMEWORK_OVERVIEW.md)           | Understanding    |
-| Dependency Injection     | [02-DEPENDENCY_INJECTION.md](./02-DEPENDENCY_INJECTION.md)       | Core Concept     |
-| Controllers & Routing    | [04-CONTROLLERS_ROUTING.md](./04-CONTROLLERS_ROUTING.md)         | Building APIs    |
-| Database & ORM           | [05-DATABASE_ORM.md](./05-DATABASE_ORM.md)                       | Data Persistence |
-| Security & Auth          | [06-SECURITY_AUTH.md](./06-SECURITY_AUTH.md)                     | Security         |
-| Testing                  | [11-TESTING.md](./11-TESTING.md)                                 | Quality          |
-| Troubleshooting          | [16-TROUBLESHOOTING.md](./16-TROUBLESHOOTING.md)                 | Problem Solving  |
-| Migration Guide          | [17-MIGRATION_GUIDE.md](./17-MIGRATION_GUIDE.md)                 | Switching Frameworks |
-| Best Practices           | [13-BEST_PRACTICES.md](./13-BEST_PRACTICES.md)                   | Production       |
+| Topic                 | File                                                       | For                  |
+| --------------------- | ---------------------------------------------------------- | -------------------- |
+| Getting Started       | [00-GETTING_STARTED.md](./00-GETTING_STARTED.md)           | Beginners            |
+| Quick Reference       | [15-QUICK_REFERENCE.md](./15-QUICK_REFERENCE.md)           | All Developers       |
+| Framework Overview    | [01-FRAMEWORK_OVERVIEW.md](./01-FRAMEWORK_OVERVIEW.md)     | Understanding        |
+| Dependency Injection  | [02-DEPENDENCY_INJECTION.md](./02-DEPENDENCY_INJECTION.md) | Core Concept         |
+| Controllers & Routing | [04-CONTROLLERS_ROUTING.md](./04-CONTROLLERS_ROUTING.md)   | Building APIs        |
+| Database & ORM        | [05-DATABASE_ORM.md](./05-DATABASE_ORM.md)                 | Data Persistence     |
+| Security & Auth       | [06-SECURITY_AUTH.md](./06-SECURITY_AUTH.md)               | Security             |
+| Testing               | [11-TESTING.md](./11-TESTING.md)                           | Quality              |
+| Troubleshooting       | [16-TROUBLESHOOTING.md](./16-TROUBLESHOOTING.md)           | Problem Solving      |
+| Migration Guide       | [17-MIGRATION_GUIDE.md](./17-MIGRATION_GUIDE.md)           | Switching Frameworks |
+| Best Practices        | [13-BEST_PRACTICES.md](./13-BEST_PRACTICES.md)             | Production           |
 
 ---
 
