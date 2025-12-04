@@ -1,17 +1,307 @@
 # 14 - Real-World Examples
 
+> **Learning Path:** Start with Simple Examples → Intermediate → Advanced
+
 ## 📋 Table of Contents
 
-- [Complete Blog API](#complete-blog-api)
-- [E-Commerce REST API](#e-commerce-rest-api)
-- [Authentication System](#authentication-system)
-- [File Upload Service](#file-upload-service)
-- [Task Management API](#task-management-api)
-- [Multi-Tenant SaaS](#multi-tenant-saas)
+- [Level 1: Simple Examples](#level-1-simple-examples)
+  - [Hello World API](#hello-world-api)
+  - [Simple Todo API](#simple-todo-api)
+  - [Contact Form API](#contact-form-api)
+- [Level 2: Intermediate Examples](#level-2-intermediate-examples)
+  - [Blog API with Authentication](#blog-api-with-authentication)
+  - [E-Commerce Product Catalog](#e-commerce-product-catalog)
+  - [Task Management API](#task-management-api)
+- [Level 3: Advanced Examples](#level-3-advanced-examples)
+  - [Complete Blog Platform](#complete-blog-platform)
+  - [Multi-Tenant SaaS](#multi-tenant-saas)
+  - [Real-Time Chat Application](#real-time-chat-application)
 
 ---
 
-## 📝 Complete Blog API
+## 🟢 Level 1: Simple Examples
+
+Perfect for beginners who just completed the Getting Started guide.
+
+### Hello World API
+
+**Goal:** Learn basic routing and responses
+
+**Time:** 10 minutes
+
+```typescript
+// main.ts
+import { FynixFactory, Module, Controller, Get } from "@fynixjs/fynix";
+
+@Controller("/api")
+export class AppController {
+  @Get("/")
+  getRoot() {
+    return {
+      message: "Welcome to FynixJS!",
+      version: "1.0.0",
+      timestamp: new Date().toISOString(),
+    };
+  }
+
+  @Get("/health")
+  getHealth() {
+    return {
+      status: "healthy",
+      uptime: process.uptime(),
+    };
+  }
+}
+
+@Module({
+  controllers: [AppController],
+})
+export class AppModule {}
+
+async function bootstrap() {
+  const app = await FynixFactory.create(AppModule);
+  await app.init();
+  await app.listen(3000);
+  console.log("🚀 Server running on http://localhost:3000");
+}
+
+bootstrap();
+```
+
+**Test it:**
+```bash
+curl http://localhost:3000/api/
+curl http://localhost:3000/api/health
+```
+
+---
+
+### Simple Todo API
+
+**Goal:** Learn CRUD operations without database
+
+**Time:** 20 minutes
+
+```typescript
+// todo.controller.ts
+import { Controller, Get, Post, Put, Delete, Param, Body } from "@fynixjs/fynix";
+
+interface Todo {
+  id: number;
+  title: string;
+  completed: boolean;
+}
+
+@Controller("/todos")
+export class TodoController {
+  private todos: Todo[] = [
+    { id: 1, title: "Learn FynixJS", completed: false },
+    { id: 2, title: "Build an API", completed: false },
+  ];
+  private nextId = 3;
+
+  @Get()
+  findAll() {
+    return { todos: this.todos };
+  }
+
+  @Get("/:id")
+  findOne(@Param("id") id: string) {
+    const todo = this.todos.find((t) => t.id === parseInt(id));
+    if (!todo) {
+      return { error: "Todo not found" };
+    }
+    return { todo };
+  }
+
+  @Post()
+  create(@Body() body: { title: string }) {
+    const todo: Todo = {
+      id: this.nextId++,
+      title: body.title,
+      completed: false,
+    };
+    this.todos.push(todo);
+    return { message: "Todo created", todo };
+  }
+
+  @Put("/:id")
+  update(@Param("id") id: string, @Body() body: { completed: boolean }) {
+    const todo = this.todos.find((t) => t.id === parseInt(id));
+    if (!todo) {
+      return { error: "Todo not found" };
+    }
+    todo.completed = body.completed;
+    return { message: "Todo updated", todo };
+  }
+
+  @Delete("/:id")
+  remove(@Param("id") id: string) {
+    const index = this.todos.findIndex((t) => t.id === parseInt(id));
+    if (index === -1) {
+      return { error: "Todo not found" };
+    }
+    const deleted = this.todos.splice(index, 1)[0];
+    return { message: "Todo deleted", todo: deleted };
+  }
+}
+
+// main.ts
+@Module({
+  controllers: [TodoController],
+})
+export class AppModule {}
+```
+
+**Test it:**
+```bash
+# Get all todos
+curl http://localhost:3000/todos
+
+# Create a todo
+curl -X POST http://localhost:3000/todos \
+  -H "Content-Type: application/json" \
+  -d '{"title":"New Todo"}'
+
+# Update a todo
+curl -X PUT http://localhost:3000/todos/1 \
+  -H "Content-Type: application/json" \
+  -d '{"completed":true}'
+
+# Delete a todo
+curl -X DELETE http://localhost:3000/todos/1
+```
+
+---
+
+### Contact Form API
+
+**Goal:** Learn validation and email sending (simulated)
+
+**Time:** 15 minutes
+
+```typescript
+// contact.dto.ts
+import { IsString, IsEmail, IsNotEmpty, MinLength } from "@fynixjs/fynix";
+
+export class ContactDto {
+  @IsString()
+  @IsNotEmpty()
+  @MinLength(2)
+  name: string;
+
+  @IsEmail()
+  @IsNotEmpty()
+  email: string;
+
+  @IsString()
+  @IsNotEmpty()
+  @MinLength(10)
+  message: string;
+}
+
+// contact.service.ts
+import { Injectable } from "@fynixjs/fynix";
+import { ContactDto } from "./contact.dto";
+
+@Injectable()
+export class ContactService {
+  async sendMessage(dto: ContactDto) {
+    // Simulate email sending
+    console.log("Sending email:", dto);
+    
+    // In real app, use nodemailer or similar
+    return {
+      success: true,
+      message: "Your message has been sent!",
+    };
+  }
+}
+
+// contact.controller.ts
+import { Controller, Post, Body, UsePipes } from "@fynixjs/fynix";
+import { ValidationPipe } from "@fynixjs/fynix";
+import { ContactService } from "./contact.service";
+import { ContactDto } from "./contact.dto";
+
+@Controller("/contact")
+export class ContactController {
+  constructor(private readonly contactService: ContactService) {}
+
+  @Post()
+  @UsePipes(ValidationPipe)
+  async sendMessage(@Body() dto: ContactDto) {
+    return await this.contactService.sendMessage(dto);
+  }
+}
+
+// contact.module.ts
+@Module({
+  controllers: [ContactController],
+  providers: [ContactService],
+})
+export class ContactModule {}
+```
+
+**Test it:**
+```bash
+# Valid request
+curl -X POST http://localhost:3000/contact \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "John Doe",
+    "email": "john@example.com",
+    "message": "Hello, this is a test message!"
+  }'
+
+# Invalid request (will fail validation)
+curl -X POST http://localhost:3000/contact \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "J",
+    "email": "invalid-email",
+    "message": "Short"
+  }'
+```
+
+---
+
+## 🟡 Level 2: Intermediate Examples
+
+For developers who understand basics and want to add database, authentication, etc.
+
+### Blog API with Authentication
+
+**Goal:** Full CRUD with database and JWT auth
+
+**Time:** 45 minutes
+
+**Complete project structure:**
+```
+blog-api/
+├── src/
+│   ├── main.ts
+│   ├── app.module.ts
+│   ├── auth/
+│   │   ├── auth.module.ts
+│   │   ├── auth.controller.ts
+│   │   ├── auth.service.ts
+│   │   └── jwt-auth.guard.ts
+│   └── posts/
+│       ├── posts.module.ts
+│       ├── posts.controller.ts
+│       ├── posts.service.ts
+│       └── entities/
+│           └── post.entity.ts
+```
+
+**Implementation:** (See Advanced section for complete code)
+
+---
+
+## 🔴 Level 3: Advanced Examples
+
+### Complete Blog Platform
 
 A full-featured blog with posts, comments, categories, and user management.
 

@@ -2,9 +2,35 @@
 
 Welcome to the comprehensive FynixJS documentation! This directory contains detailed guides covering every aspect of the framework.
 
+## 🚀 Start Here
+
+### New to FynixJS?
+
+👉 **[00-GETTING_STARTED.md](./00-GETTING_STARTED.md)** - **Start here!** Installation, first project, Hello World in 5 minutes
+
+### Experienced Developer?
+
+👉 **[15-QUICK_REFERENCE.md](./15-QUICK_REFERENCE.md)** - API cheat sheet, decorator reference  
+👉 **[17-MIGRATION_GUIDE.md](./17-MIGRATION_GUIDE.md)** - Coming from Express/NestJS/Fastify?
+
+### Need Help?
+
+👉 **[16-TROUBLESHOOTING.md](./16-TROUBLESHOOTING.md)** - Common errors and solutions  
+👉 **[18-CLI_REFERENCE.md](./18-CLI_REFERENCE.md)** - CLI commands and tools
+
+---
+
 ## 📚 Documentation Structure
 
-### Core Concepts
+### 🎓 Beginner Track (Start Here)
+
+0. **[00-GETTING_STARTED.md](./00-GETTING_STARTED.md)** ⭐ **NEW!**
+   - Prerequisites (Node.js, TypeScript)
+   - Installation guide
+   - Your first FynixJS app in 5 minutes
+   - Project structure
+   - Hot reload setup
+   - Common issues and solutions
 
 1. **[01-FRAMEWORK_OVERVIEW.md](./01-FRAMEWORK_OVERVIEW.md)** ✅
 
@@ -54,7 +80,7 @@ Welcome to the comprehensive FynixJS documentation! This directory contains deta
    - RESTful API best practices
    - Real-world examples (Blog API, E-Commerce API)
 
-### Database & Persistence
+### 🏗️ Intermediate Track
 
 5. **[05-DATABASE_ORM.md](./05-DATABASE_ORM.md)** ✅
    - Database setup and configuration
@@ -68,8 +94,6 @@ Welcome to the comprehensive FynixJS documentation! This directory contains deta
    - Schema synchronization
    - Best practices
 
-### Security & Authentication
-
 6. **[06-SECURITY_AUTH.md](./06-SECURITY_AUTH.md)** ✅
    - JWT authentication
    - Password hashing with bcrypt
@@ -81,8 +105,6 @@ Welcome to the comprehensive FynixJS documentation! This directory contains deta
    - Role-based access control (RBAC)
    - OAuth integration
    - Best practices
-
-### Request Processing
 
 7. **[07-GUARDS_INTERCEPTORS_DEEP.md](./07-GUARDS_INTERCEPTORS_DEEP.md)** ✅
 
@@ -115,7 +137,7 @@ Welcome to the comprehensive FynixJS documentation! This directory contains deta
    - Logging errors
    - Production error handling
 
-### Advanced Features
+### 🚀 Advanced Track
 
 10. **[10-ADVANCED_FEATURES.md](./10-ADVANCED_FEATURES.md)** ✅
 
@@ -140,8 +162,6 @@ Welcome to the comprehensive FynixJS documentation! This directory contains deta
     - Test utilities and assertions
     - Coverage and best practices
 
-### Production & Deployment
-
 12. **[12-DEPLOYMENT.md](./12-DEPLOYMENT.md)** ✅
     - Production configuration
     - Environment variables
@@ -154,7 +174,7 @@ Welcome to the comprehensive FynixJS documentation! This directory contains deta
     - Graceful shutdown
     - Scaling strategies
 
-### Best Practices & Patterns
+### 📚 Reference & Resources
 
 13. **[13-BEST_PRACTICES.md](./13-BEST_PRACTICES.md)** ✅
 
@@ -177,67 +197,115 @@ Welcome to the comprehensive FynixJS documentation! This directory contains deta
     - Real-time chat application
     - Task management system
 
+15. **[15-QUICK_REFERENCE.md](./15-QUICK_REFERENCE.md)** ⭐ **NEW!**
+    - Decorator quick reference
+    - API cheat sheet
+    - Common patterns at a glance
+    - Code snippets library
+    - Parameter decorators
+    - HTTP status codes
+
+16. **[16-TROUBLESHOOTING.md](./16-TROUBLESHOOTING.md)** ⭐ **NEW!**
+    - Common errors and solutions
+    - Debugging techniques
+    - Performance issues
+    - Database connection problems
+    - TypeScript configuration issues
+    - FAQ
+
+17. **[17-MIGRATION_GUIDE.md](./17-MIGRATION_GUIDE.md)** ⭐ **NEW!**
+    - Migrating from Express.js
+    - Migrating from NestJS
+    - Migrating from Fastify
+    - Feature comparison table
+    - Code equivalents
+    - Best migration practices
+
+18. **[18-CLI_REFERENCE.md](./18-CLI_REFERENCE.md)** ⭐ **NEW!**
+    - CLI commands overview
+    - fynix.js usage
+    - Project scaffolding
+    - Code generation
+    - Development tools
+    - Build and deployment commands
+
 ---
 
-## 🎯 Quick Navigation
+## 🎯 Quick Navigation by Use Case
 
-### By Topic
+### 🆕 "I'm brand new to FynixJS"
 
-**Getting Started**
+1. [Getting Started](./00-GETTING_STARTED.md) - Install & first app
+2. [Framework Overview](./01-FRAMEWORK_OVERVIEW.md) - Understand the basics
+3. [Controllers & Routing](./04-CONTROLLERS_ROUTING.md) - Build your first API
+4. [Dependency Injection](./02-DEPENDENCY_INJECTION.md) - Learn DI pattern
 
-- [Framework Overview](./01-FRAMEWORK_OVERVIEW.md)
-- [Dependency Injection](./02-DEPENDENCY_INJECTION.md)
-- [Modules](./03-MODULES_ARCHITECTURE.md)
+### 🔄 "I'm coming from another framework"
 
-**Building APIs**
+- [Migration Guide](./17-MIGRATION_GUIDE.md) - Express/NestJS/Fastify comparison
+- [Quick Reference](./15-QUICK_REFERENCE.md) - API cheat sheet
+- [Real-World Examples](./14-REAL_WORLD_EXAMPLES.md) - See complete apps
 
-- [Controllers & Routing](./04-CONTROLLERS_ROUTING.md)
-- [Database & ORM](./05-DATABASE_ORM.md)
-- [Validation & Pipes](./08-VALIDATION_PIPES.md)
+### 🔍 "I need a specific feature"
 
-**Security**
+| Need                       | Go To                                                                                       |
+| -------------------------- | ------------------------------------------------------------------------------------------- |
+| Authentication & Security  | [Security & Auth](./06-SECURITY_AUTH.md)                                                    |
+| Database & ORM             | [Database & ORM](./05-DATABASE_ORM.md)                                                      |
+| Input Validation           | [Validation & Pipes](./08-VALIDATION_PIPES.md)                                              |
+| Error Handling             | [Error Handling](./09-ERROR_HANDLING.md)                                                    |
+| WebSockets / GraphQL       | [Advanced Features](./10-ADVANCED_FEATURES.md)                                              |
+| Testing                    | [Testing Guide](./11-TESTING.md)                                                            |
+| Deployment                 | [Deployment](./12-DEPLOYMENT.md)                                                            |
 
-- [Security & Authentication](./06-SECURITY_AUTH.md)
-- [Guards & Interceptors](./07-GUARDS_INTERCEPTORS_DEEP.md)
-- [Error Handling](./09-ERROR_HANDLING.md)
+### 🆘 "Something's not working"
 
-**Advanced**
+1. [Troubleshooting](./16-TROUBLESHOOTING.md) - Common errors & solutions
+2. [CLI Reference](./18-CLI_REFERENCE.md) - Command-line tools
+3. [Best Practices](./13-BEST_PRACTICES.md) - Avoid common pitfalls
 
-- [Advanced Features](./10-ADVANCED_FEATURES.md)
-- [Testing](./11-TESTING.md)
-- [Deployment](./12-DEPLOYMENT.md)
+### 📖 "I want to learn systematically"
 
-**Reference**
+**Beginner Path** (4-6 hours):
+```
+00-Getting Started → 01-Framework Overview → 04-Controllers → 02-DI → 03-Modules
+```
 
-- [Best Practices](./13-BEST_PRACTICES.md)
-- [Real-World Examples](./14-REAL_WORLD_EXAMPLES.md)
-- Real-World Examples (14)
+**Intermediate Path** (8-12 hours):
+```
+05-Database → 06-Security → 08-Validation → 07-Guards & Interceptors → 09-Error Handling
+```
+
+**Advanced Path** (12+ hours):
+```
+10-Advanced Features → 11-Testing → 12-Deployment → 13-Best Practices → 14-Real-World Examples
+```
 
 ---
 
 ## 📖 How to Use This Documentation
 
-### For Beginners
+### For Complete Beginners
 
-1. Start with **01-FRAMEWORK_OVERVIEW.md** to understand FynixJS
-2. Learn **02-DEPENDENCY_INJECTION.md** for the DI pattern
-3. Read **03-MODULES_ARCHITECTURE.md** to organize code
-4. Master **04-CONTROLLERS_ROUTING.md** to build APIs
-5. Continue with Database, Security, and Validation guides
+1. **Start**: [00-GETTING_STARTED.md](./00-GETTING_STARTED.md) - Build your first app in 5 minutes
+2. **Understand**: [01-FRAMEWORK_OVERVIEW.md](./01-FRAMEWORK_OVERVIEW.md) - Learn the architecture
+3. **Build**: [04-CONTROLLERS_ROUTING.md](./04-CONTROLLERS_ROUTING.md) - Create REST APIs
+4. **Organize**: [02-DEPENDENCY_INJECTION.md](./02-DEPENDENCY_INJECTION.md) & [03-MODULES_ARCHITECTURE.md](./03-MODULES_ARCHITECTURE.md)
+5. **Practice**: [14-REAL_WORLD_EXAMPLES.md](./14-REAL_WORLD_EXAMPLES.md) - Follow complete examples
 
-### For Intermediate Users
+### For Experienced Developers
 
-- Jump directly to specific topics you need
-- Review **13-BEST_PRACTICES.md** for patterns
-- Explore **14-REAL_WORLD_EXAMPLES.md** for complete applications
-- Deep dive into Guards, Interceptors, and advanced features
+- **Quick Start**: [15-QUICK_REFERENCE.md](./15-QUICK_REFERENCE.md) - All decorators & APIs at a glance
+- **Migration**: [17-MIGRATION_GUIDE.md](./17-MIGRATION_GUIDE.md) - Switch from Express/NestJS
+- **Deep Dive**: Jump to specific topics (Database, Security, Testing)
+- **Reference**: Use docs as API reference while coding
+- **Production**: [13-BEST_PRACTICES.md](./13-BEST_PRACTICES.md) & [12-DEPLOYMENT.md](./12-DEPLOYMENT.md)
 
-### For Advanced Users
+### For Framework Contributors
 
-- Use as a reference for specific APIs
-- Review advanced patterns and optimization techniques
-- Check deployment and scaling strategies
-- Contribute improvements based on your experience
+- Review all advanced topics and implementation details
+- Check [13-BEST_PRACTICES.md](./13-BEST_PRACTICES.md) for coding standards
+- Explore internals in Framework Overview and DI Container sections
 
 ---
 
@@ -259,22 +327,77 @@ Welcome to the comprehensive FynixJS documentation! This directory contains deta
 
 ## 📝 Documentation Status
 
-| Document                       | Status      | Last Updated |
-| ------------------------------ | ----------- | ------------ |
-| 01-FRAMEWORK_OVERVIEW.md       | ✅ Complete | 2025-12-04   |
-| 02-DEPENDENCY_INJECTION.md     | ✅ Complete | 2025-12-04   |
-| 03-MODULES_ARCHITECTURE.md     | ✅ Complete | 2025-12-04   |
-| 04-CONTROLLERS_ROUTING.md      | ✅ Complete | 2025-12-04   |
-| 05-DATABASE_ORM.md             | 🚧 Pending  | -            |
-| 06-SECURITY_AUTH.md            | 🚧 Pending  | -            |
-| 07-GUARDS_INTERCEPTORS_DEEP.md | 🚧 Pending  | -            |
-| 08-VALIDATION_PIPES.md         | 🚧 Pending  | -            |
-| 09-ERROR_HANDLING.md           | 🚧 Pending  | -            |
-| 10-ADVANCED_FEATURES.md        | 🚧 Pending  | -            |
-| 11-TESTING.md                  | 🚧 Pending  | -            |
-| 12-DEPLOYMENT.md               | 🚧 Pending  | -            |
-| 13-BEST_PRACTICES.md           | 🚧 Pending  | -            |
-| 14-REAL_WORLD_EXAMPLES.md      | 🚧 Pending  | -            |
+| Document                       | Status      | Last Updated | Audience           |
+| ------------------------------ | ----------- | ------------ | ------------------ |
+| 00-GETTING_STARTED.md          | ✅ Complete | 2025-12-04   | Beginners          |
+| 01-FRAMEWORK_OVERVIEW.md       | ✅ Complete | 2025-12-04   | All                |
+| 02-DEPENDENCY_INJECTION.md     | ✅ Complete | 2025-12-04   | Intermediate       |
+| 03-MODULES_ARCHITECTURE.md     | ✅ Complete | 2025-12-04   | Intermediate       |
+| 04-CONTROLLERS_ROUTING.md      | ✅ Complete | 2025-12-04   | Beginners          |
+| 05-DATABASE_ORM.md             | ✅ Complete | 2025-12-04   | Intermediate       |
+| 06-SECURITY_AUTH.md            | ✅ Complete | 2025-12-04   | Intermediate       |
+| 07-GUARDS_INTERCEPTORS_DEEP.md | ✅ Complete | 2025-12-04   | Advanced           |
+| 08-VALIDATION_PIPES.md         | ✅ Complete | 2025-12-04   | Intermediate       |
+| 09-ERROR_HANDLING.md           | ✅ Complete | 2025-12-04   | Intermediate       |
+| 10-ADVANCED_FEATURES.md        | ✅ Complete | 2025-12-04   | Advanced           |
+| 11-TESTING.md                  | ✅ Complete | 2025-12-04   | Intermediate       |
+| 12-DEPLOYMENT.md               | ✅ Complete | 2025-12-04   | Advanced           |
+| 13-BEST_PRACTICES.md           | ✅ Complete | 2025-12-04   | All                |
+| 14-REAL_WORLD_EXAMPLES.md      | ✅ Complete | 2025-12-04   | All                |
+| 15-QUICK_REFERENCE.md          | ⭐ New      | 2025-12-04   | Experienced Devs   |
+| 16-TROUBLESHOOTING.md          | ⭐ New      | 2025-12-04   | All                |
+| 17-MIGRATION_GUIDE.md          | ⭐ New      | 2025-12-04   | Experienced Devs   |
+| 18-CLI_REFERENCE.md            | ⭐ New      | 2025-12-04   | All                |
+
+---
+
+## 🎓 Learning Paths
+
+### Path 1: Absolute Beginner (Never used Node.js frameworks)
+**Time: 6-8 hours**
+```
+00-Getting Started (30 min)
+  ↓
+01-Framework Overview (1 hour)
+  ↓
+04-Controllers & Routing (1.5 hours)
+  ↓
+Simple project practice (2 hours)
+  ↓
+05-Database & ORM (1.5 hours)
+  ↓
+Build a CRUD app (1.5 hours)
+```
+
+### Path 2: Experienced Developer (Know Express/NestJS)
+**Time: 2-3 hours**
+```
+15-Quick Reference (15 min)
+  ↓
+17-Migration Guide (30 min)
+  ↓
+Skim relevant topics (1 hour)
+  ↓
+Build something (1 hour)
+```
+
+### Path 3: Production Ready (Building serious apps)
+**Time: 10-15 hours**
+```
+Complete Beginner Path
+  ↓
+06-Security & Auth (2 hours)
+  ↓
+07-Guards & Interceptors (1.5 hours)
+  ↓
+08-Validation (1 hour)
+  ↓
+11-Testing (2 hours)
+  ↓
+13-Best Practices (1 hour)
+  ↓
+12-Deployment (1.5 hours)
+```
 
 ---
 
